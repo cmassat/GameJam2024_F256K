@@ -15,9 +15,13 @@ main
     jsr init_video
     jsr clear_screen
     jsr init_events
+    jsr load_sprite_npc_bin
+    jsr load_sprite_npc_pal
+    jsr clut_load_3
     jsr load_clut0
     jsr load_splash
     jsr show_splash
+
     jsr set_frame_timer
     jsr handle_events
 rts

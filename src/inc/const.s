@@ -52,6 +52,11 @@ MMU_BANK_6_REG = $0E
 MMU_BANK_7_REG = $0F
 MMU_MLUT_TABLE = $08
 
+DIR_UP = $0
+DIR_DN = $1
+DIR_RT = $2
+DIR_LF = $3
+
 ym_reg_opl2     = $d580 ; Address pointer register for ports 0x000–0x0FF
 ym_reg_data     = $d581 ; DATA
 ym_reg_opl3     = $d582 ; Address pointer register for ports 0x100–0x1FF0

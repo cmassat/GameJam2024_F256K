@@ -75,6 +75,20 @@ load_sprite_pal
     ldy #PAL_BANK
     jsr fopen
     rts
+
+load_sprite_npc_bin
+    lda <#sprite_npc_bin
+    ldx >#sprite_npc_bin
+    ldy #SPR16_BANK
+    jsr fopen
+    rts
+
+load_sprite_npc_pal
+    lda <#sprite_npc_pal
+    ldx >#sprite_npc_pal
+    ldy #PAL_BANK
+    jsr fopen
+    rts
 .endsection
 
 .section variables

@@ -13,3 +13,4 @@
 .include "joy.s"
 .include "kbd.s"
 .include "tile.s"
+.include "player.s"

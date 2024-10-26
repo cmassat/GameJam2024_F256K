@@ -53,6 +53,7 @@ _yes:
 
 lvl1_load_data
     ;init variables
+    jsr init_pumkin
     lda #0
     sta m_x_scroll_tile
     sta v_sync
@@ -131,20 +132,84 @@ lvl1_load_data
     rts
 
 scroll_lvl1_map
+    jsr handle_jump
+    jsr  handle_pumkin
     jsr is_joy_a_right_pressed
     bcc _move_right
     jsr is_d_pressed
     bcc _move_right
     jsr is_shft_d_pressed
     bcc _move_double_right
+    jsr is_joy_a_left_pressed
+    bcc _move_left
     rts
 _move_right
+    lda #DIR_RT
+    sta m_p1_direction
     jsr move_right
     rts
 _move_double_right
     jsr move_right
     jsr move_right
     rts
+_move_left
+    lda #DIR_LF
+    sta m_p1_direction
+    jsr move_left
+    rts
+
+move_left
+    lda m_x_scroll_tile
+    cmp #0
+    bne _ok_to_scroll
+    rts
+_ok_to_scroll
+    jsr handle_pc1_animation
+    lda #0
+    sta MMU_IO_CTRL
+    lda m_lvl1_state
+    cmp #LVL1_SCROLL_MAP_STATE
+    beq _yes
+    rts
+_yes:
+    lda v_sync
+    clc
+    adc #1
+    sta v_sync
+    lda v_sync
+    cmp #1
+    beq _scroll
+    rts
+_scroll:
+    jsr scroll_pixels_left
+    lda m_do_scroll_tile
+    cmp #1
+    bne _move
+    lda m_x_scroll_tile
+    sec
+    sbc #1
+    sta m_x_scroll_tile
+    stz m_do_scroll_tile
+_move:
+    lda m_x_scroll_tile
+    asl
+    asl
+    asl
+    asl
+    ora m_x_scroll_pxl
+    sta TILE_MAP0_X_SC
+
+    lda m_x_scroll_tile
+    lsr
+    lsr
+    lsr
+    lsr
+    sta TILE_MAP0_X_SC_u
+    stz v_sync
+
+    lda m_x_scroll_tile
+    rts
+
 move_right
     jsr handle_pc1_animation
     lda #0
@@ -190,6 +255,23 @@ _move:
     stz v_sync
 
     lda m_x_scroll_tile
+    rts
+
+scroll_pixels_left
+    stz MMU_IO_CTRL
+    jsr print_scroll
+    lda m_x_scroll_pxl
+    cmp #0
+    bne _do_scroll
+    lda #15
+    sta m_x_scroll_pxl
+    lda #1
+    sta m_do_scroll_tile
+    rts
+_do_scroll:
+    lda m_x_scroll_pxl
+    sbc #1
+    sta m_x_scroll_pxl
     rts
 
 scroll_pixel

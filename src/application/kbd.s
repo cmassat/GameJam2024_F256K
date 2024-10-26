@@ -17,3 +17,13 @@ is_shft_d_pressed
 _yes
     clc
     rts
+
+is_j_pressed
+    lda keypress
+    cmp #$6A
+    beq _yes
+    sec
+    rts
+_yes
+    clc
+    rts

@@ -9,8 +9,7 @@ print_scroll
     lda >#hex_values
     sta POINTER_TXT + 1
 
-
-    lda $D884
+    lda m_check_x_tile
     lsr
     lsr
     lsr
@@ -21,7 +20,7 @@ print_scroll
     sta $C000
 
 
-    lda $D884
+    lda m_check_x_tile
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -40,7 +39,7 @@ print_anim
     sta POINTER_TXT + 1
 
 
-    lda keypress
+    lda m_x_scroll_tile
     lsr
     lsr
     lsr
@@ -51,7 +50,7 @@ print_anim
     sta $C004
 
 
-    lda keypress
+    lda m_x_scroll_tile
     and #$0f
     tay
     lda (POINTER_TXT), y
