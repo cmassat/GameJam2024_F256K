@@ -63,15 +63,15 @@ load_lvl1_mus
     rts
 
 load_sprite_bin
-    lda <#sprite_bin
-    ldx >#sprite_bin
-    ldy #SPR_BANK
+    lda <#sprite_pc_bin
+    ldx >#sprite_pc_bin
+    ldy #SPR32_BANK
     jsr fopen
     rts
 
 load_sprite_pal
-    lda <#sprite_pal
-    ldx >#sprite_pal
+    lda <#sprite_pc_pal
+    ldx >#sprite_pc_pal
     ldy #PAL_BANK
     jsr fopen
     rts
@@ -102,9 +102,16 @@ lvl1_mus
 
 lvl1_bak_bin
     .text "bak.bin",0
-sprite_bin
-    .text "sprite.bin",0
 
-sprite_pal
-    .text "sprite.pal",0
+sprite_pc_bin
+    .text "pc.bin",0
+
+sprite_pc_pal
+    .text "pc.pal",0
+
+sprite_npc_bin
+    .text "npc.bin",0
+
+sprite_npc_pal
+    .text "npc.pal",0
 .endsection

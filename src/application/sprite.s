@@ -1,5 +1,5 @@
 .section variables
-PC1_SPR_WLK_0 = SPR_ADDR
+PC1_SPR_WLK_0 = SPR32_ADDR
 PC1_SPR_WLK_1 = PC1_SPR_WLK_0 + $400
 PC1_SPR_WLK_2 = PC1_SPR_WLK_1 + $400
 PC1_SPR_WLK_3 = PC1_SPR_WLK_2 + $400
@@ -52,11 +52,11 @@ init_pc1
     ora #SPR_MASK_CLUT_2
     ora #SPR_MASK_ENABLE
     sta SPR_CTRL_00
-    lda #<SPR_ADDR
+    lda #<SPR32_ADDR
     sta SPR_CTRL_00 + 1
-    lda #>SPR_ADDR
+    lda #>SPR32_ADDR
     sta SPR_CTRL_00 + 2
-    lda #`SPR_ADDR
+    lda #`SPR32_ADDR
     sta SPR_CTRL_00 + 3
 
     lda #100

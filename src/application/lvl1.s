@@ -3,18 +3,6 @@ LVL1_LOAD_DATA_STATE = $1
 LVL1_SCROLL_MAP_STATE = $2
 
 handle_lvl1
-;    jsr is_sof
-;    bcc _do_execute
-;    stz m_lvl1_semaphore
-;    rts
-;_do_execute
-;    lda m_lvl1_semaphore
-;    cmp #0
-;    beq _execute_ok
-;    rts
-;_execute_ok
-;    lda #1
-;    sta m_lvl1_semaphore
     lda #STATE_LVL1
     jsr is_state
     bcc _yes
@@ -27,13 +15,13 @@ _yes
 _continue
     lda #1
     sta sof_semaphore
-    lda m_lvl1_semaphore
-    cmp #0
-    beq _execute
+   ; lda m_lvl1_semaphore
+   ; cmp #0
+    ;beq _execute
     ;rts
-_execute
-    lda #1
-    sta m_lvl1_semaphore
+;_execute
+ ;   lda #1
+ ;   sta m_lvl1_semaphore
     lda m_lvl1_state
     cmp #LVL1_INIT_STATE
     bne _load_map
@@ -55,8 +43,6 @@ _ctrl_map
 _end
     rts
 
-
-
 lvl1_disable_video
     lda m_lvl1_state
     beq _yes
@@ -66,12 +52,6 @@ _yes:
     rts
 
 lvl1_load_data
-;    lda m_lvl1_state
-;    cmp #LVL1_LOAD_MAP_STATE
-;    beq _yes
-;    rts
-;_yes:
-
     ;init variables
     lda #0
     sta m_x_scroll_tile
@@ -151,6 +131,21 @@ lvl1_load_data
     rts
 
 scroll_lvl1_map
+    jsr is_joy_a_right_pressed
+    bcc _move_right
+    jsr is_d_pressed
+    bcc _move_right
+    jsr is_shft_d_pressed
+    bcc _move_double_right
+    rts
+_move_right
+    jsr move_right
+    rts
+_move_double_right
+    jsr move_right
+    jsr move_right
+    rts
+move_right
     jsr handle_pc1_animation
     lda #0
     sta MMU_IO_CTRL
@@ -195,12 +190,6 @@ _move:
     stz v_sync
 
     lda m_x_scroll_tile
-    ;cmp #128
-    ;beq _reset
-
-    rts
-_reset:
-    stz m_x_scroll_tile
     rts
 
 scroll_pixel
@@ -224,10 +213,5 @@ m_lvl1_semaphore
     .byte 0
 m_lvl1_state
     .byte 0
-m_x_scroll_tile
-    .byte 0
-m_x_scroll_pxl
-    .byte 0
-m_do_scroll_tile
-    .byte 0
+
 .endsection

@@ -11,3 +11,5 @@
 .include "vgm_play.s"
 .include "sprite.s"
 .include "joy.s"
+.include "kbd.s"
+.include "tile.s"

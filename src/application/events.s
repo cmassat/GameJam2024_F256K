@@ -29,6 +29,9 @@ handle_events
    cmp		#kernel.event.key.PRESSED
    beq		key_pressed
 
+   cmp #kernel.event.key.RELEASED
+   beq		key_released
+
    cmp     #kernel.event.timer.EXPIRED
    beq		handle_timer_event
    rts
@@ -36,9 +39,12 @@ handle_events
 key_pressed
    lda event.key.ascii
    sta keypress
-
    rts     ; Anything not handled can be ignored.
 
+key_released
+    lda #0
+    sta keypress
+    rts
 handle_timer_event
     jsr sof_vgm
 	jsr print_scroll

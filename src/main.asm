@@ -10,7 +10,7 @@ start
     jmp main
 main
     nop
-   ;stz m_lvl1_state
+    stz m_lvl1_state
     jsr init_state
     jsr init_video
     jsr clear_screen
@@ -25,3 +25,4 @@ rts
 
 .include "./inc/includes.s"
 .include "./application/app.s"
+.include "./npc/npc.s"

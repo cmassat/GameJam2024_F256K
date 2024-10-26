@@ -10,7 +10,7 @@ print_scroll
     sta POINTER_TXT + 1
 
 
-    lda m_state
+    lda $D884
     lsr
     lsr
     lsr
@@ -21,7 +21,7 @@ print_scroll
     sta $C000
 
 
-    lda m_state
+    lda $D884
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -40,7 +40,7 @@ print_anim
     sta POINTER_TXT + 1
 
 
-    lda sof_semaphore
+    lda keypress
     lsr
     lsr
     lsr
@@ -51,7 +51,7 @@ print_anim
     sta $C004
 
 
-    lda sof_semaphore
+    lda keypress
     and #$0f
     tay
     lda (POINTER_TXT), y
