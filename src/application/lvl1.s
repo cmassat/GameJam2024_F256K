@@ -3,6 +3,11 @@ LVL1_LOAD_DATA_STATE = $1
 LVL1_SCROLL_MAP_STATE = $2
 
 handle_lvl1
+    lda m_is_collided
+    cmp #0
+    beq _no_collission
+    rts
+_no_collission
     lda #STATE_LVL1
     jsr is_state
     bcc _yes
@@ -130,6 +135,7 @@ lvl1_load_data
     rts
 
 scroll_lvl1_map
+
     lda m_lvl1_speed
     cmp #1
     beq _set_speed_2x
@@ -140,20 +146,15 @@ _set_speed_2x
     lda #2
     sta m_lvl1_speed
 _move
-    jsr handle_jump
-    jsr  handle_pumpkin
-    jsr is_joy_a_right_pressed
-    bcc _move_right
-    jsr is_d_pressed
-    bcc _move_right
-    jsr is_shft_d_pressed
-    bcc _move_double_right
-    jsr is_joy_a_left_pressed
-    bcc _move_left
+    jsr handle_player_move
+    lda m_p1_direction
+    cmp #DIR_RT
+    beq _move_right
+    cmp #DIR_LF
+    beq _move_left
     rts
+
 _move_right
-    lda #DIR_RT
-    sta m_p1_direction
     lda m_lvl1_speed
     cmp #2
     beq _move_double_right
@@ -165,8 +166,6 @@ _move_double_right
     jsr move_right
     rts
 _move_left
-    lda #DIR_LF
-    sta m_p1_direction
     lda m_lvl1_speed
     cmp #2
     beq _move_double_left
@@ -317,5 +316,4 @@ m_lvl1_state
     .byte 0
 m_lvl1_speed
     .byte 0
-
 .endsection

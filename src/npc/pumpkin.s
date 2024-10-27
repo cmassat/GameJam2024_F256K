@@ -58,6 +58,7 @@ _ok
     jsr pumpkin_fr3
     jsr pumpkin_fr4
     jsr pumpkin_fr5
+    jsr pumpkin_collision
     rts
 
 pumpkin_fr0
@@ -182,9 +183,89 @@ _ok
 pumpkin_collision
     lda m_pumpkin_tile
     jsr get_tile_pixel_x
+    lda m_set_x
+    sta m_pumpkin_x
+    lda m_set_x + 1
+    sta m_pumpkin_x + 1
+    jsr collision_math_x
+    jsr collision_math_y
+    jsr is_collided
 
+    rts
 
+is_collided
+    clc
+    lda m_collide_x_diff + 1
+    cmp #0
+    beq _next_x
+    rts
+_next_x
+    lda m_collide_x_diff
+    cmp #16
+    bcc _check_y
+    rts
+_check_y
+    lda m_collide_y_diff + 1
+    cmp #0
+    beq _next_y
+    rts
+_next_y
+    lda m_collide_y_diff
+    cmp #25
+    bcc _hit
+    rts
+_hit
+    sec
+    lda #1
+    sta m_is_collided
+    rts
 
+collision_math_x
+    lda m_p1_x
+    sec
+    sbc m_pumpkin_x
+    sta m_collide_x_diff
+
+    lda m_p1_x + 1
+    sbc m_pumpkin_x
+    sta m_collide_x_diff + 1
+    BPL _ok
+    bra _revers_calc
+_ok
+    rts
+_revers_calc
+    lda m_pumpkin_x
+    sec
+    sbc m_p1_x
+    sta m_collide_x_diff
+
+    lda m_pumpkin_x + 1
+    sbc m_p1_x + 1
+    sta m_collide_x_diff + 1
+rts
+
+collision_math_y
+    lda m_p1_y
+    sec
+    sbc m_pumpkin_y
+    sta m_collide_y_diff
+
+    lda m_p1_y + 1
+    sbc m_pumpkin_y + 1
+    sta m_collide_y_diff + 1
+    BPL _ok
+    bra _revers_calc
+_ok
+    rts
+_revers_calc
+    sec
+    lda m_pumpkin_y
+    sbc m_p1_y
+    sta m_collide_y_diff
+
+    lda m_pumpkin_y + 1
+    sbc m_p1_y + 1
+    sta m_collide_y_diff + 1
     rts
 .endsection
 .section variables
@@ -198,4 +279,12 @@ m_pumpkin_x
     .byte 0,0
 m_pumpkin_y
     .byte 0,0
+m_pumpkin_collide
+    .byte 0
+m_collide_x_diff
+    .byte 0,0
+m_collide_y_diff
+    .byte 0,0
+m_is_collided
+    .byte 0
 .endsection

@@ -63,52 +63,6 @@ set_npc_xy .macro SPR_NUM
     sta \SPR_NUM + 7
 .endmacro
 
-init_pc1
-    #set_pc SPR_CTRL_00
-    ;lda #SPR_MASK_SIZE_32
-    ;ora #SPR_MASK_LAYER_0
-    ;ora #SPR_MASK_CLUT_2
-    ;ora #SPR_MASK_ENABLE
-    ;sta SPR_CTRL_00
-    lda #<SPR32_ADDR
-    sta SPR_CTRL_00 + 1
-    lda #>SPR32_ADDR
-    sta SPR_CTRL_00 + 2
-    lda #`SPR32_ADDR
-    sta SPR_CTRL_00 + 3
-    lda #100
-    sta m_set_x
-    lda #0
-    sta m_set_x + 1
-
-    lda #<FLOOR_LEVEL
-    sta m_set_y
-    lda #>FLOOR_LEVEL
-    sta m_set_y + 1
-    set_npc_xy SPR_CTRL_00
-    ;lda #100
-    ;sta SPR_CTRL_00 + 4
-    ;lda #0
-    ;sta SPR_CTRL_00 + 5
-
-    ;lda #240-32
-    ;sta SPR_CTRL_00 + 6
-    ;lda #0
-    ;sta SPR_CTRL_00 + 7
-    stz m_pc1_animation
-    stz m_pc1_frames_animation
-    rts
-
-set_frames
-    inc m_pc1_frames_animation
-    lda m_pc1_frames_animation
-    cmp #8
-    beq _increase_frame
-    rts
-_increase_frame
-    stz m_pc1_frames_animation
-    inc m_pc1_animation
-    rts
 .endsection
 .section variables
 m_pc1_animation

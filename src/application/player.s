@@ -16,6 +16,69 @@ FLOOR_LEVEL = 240-32
 PLAYER_X = 100
 .endsection
 .section code
+init_pc1
+    #set_pc SPR_CTRL_00
+
+    lda #<SPR32_ADDR
+    sta SPR_CTRL_00 + 1
+    lda #>SPR32_ADDR
+    sta SPR_CTRL_00 + 2
+    lda #`SPR32_ADDR
+    sta SPR_CTRL_00 + 3
+    lda #100
+    sta m_set_x
+    sta m_p1_x
+    lda #0
+    sta m_set_x + 1
+    sta m_p1_x + 1
+
+    lda #<FLOOR_LEVEL
+    sta m_set_y
+    sta m_p1_y
+    lda #>FLOOR_LEVEL
+    sta m_set_y + 1
+    sta m_p1_y +1
+    #set_npc_xy SPR_CTRL_00
+
+    stz m_pc1_animation
+    stz m_pc1_frames_animation
+    rts
+
+set_frames
+    inc m_pc1_frames_animation
+    lda m_pc1_frames_animation
+    cmp #8
+    beq _increase_frame
+    rts
+_increase_frame
+    stz m_pc1_frames_animation
+    inc m_pc1_animation
+    rts
+
+handle_player_move
+    jsr handle_jump
+    jsr  handle_pumpkin
+    jsr is_joy_a_right_pressed
+    bcc _move_right
+    jsr is_d_pressed
+    bcc _move_right
+
+    jsr is_a_pressed
+    bcc _move_left
+    jsr is_joy_a_left_pressed
+    bcc _move_left
+    lda #DIR_DN
+    sta m_p1_direction
+    rts
+_move_right
+    lda #DIR_RT
+    sta m_p1_direction
+    rts
+_move_left
+    lda #DIR_LF
+    sta m_p1_direction
+    rts
+
 handle_jump
     lda  m_jump_lock
     cmp #1
@@ -28,6 +91,7 @@ handle_jump
 _jump
     lda m_jump_lock
     cmp #0
+
     beq _ok_to_jump
     rts
 _ok_to_jump
@@ -60,8 +124,10 @@ _jumping
     jsr jump_frm_18
     lda #<PLAYER_X
     sta m_set_x
+    sta m_p1_x
     lda #>PLAYER_X
     sta m_set_x + 1
+    sta m_p1_x + 1
     set_npc_xy SPR_CTRL_00
     rts
 
@@ -77,22 +143,24 @@ _increase_frame
     rts
 
 jump_frame .macro distance, frame
-    lda #<FLOOR_LEVEL
-    sta m_p1_y
-    lda #>FLOOR_LEVEL
-    sta m_p1_y + 1
+    ;lda #<FLOOR_LEVEL
+    ;sta m_p1_y
+    ;lda #>FLOOR_LEVEL
+    ;sta m_p1_y + 1
     lda m_jump_frame
     cmp #\frame
     beq _show_frame
     bra _skip
 _show_frame
-    lda m_p1_y
+    lda #<FLOOR_LEVEL
     sec
     sbc #\distance
     sta m_set_y
-    lda m_p1_y + 1
+    sta m_p1_y
+    lda #>FLOOR_LEVEL
     sbc #0
     sta m_set_y + 1
+    sta m_p1_y + 1
 _skip
 .endmacro
 
@@ -148,7 +216,6 @@ rts
 jump_frm_16
     #jump_frame 4, 16
 rts
-
 jump_frm_17
     #jump_frame 2, 17
 rts
@@ -298,6 +365,8 @@ _left
 .section variables
 m_p1_direction
     .byte 0
+m_p1_x
+    .byte 0,0
 m_p1_y
     .byte 0,0
 m_jump_lock
