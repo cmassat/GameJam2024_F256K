@@ -16,7 +16,6 @@ vgm_start
      pla                         ; restore accumulator
     rts
 
-
 vgm_subtract_counter
     ; save flags, then disable interrupts
     php
@@ -60,8 +59,6 @@ _nowait
 _done
 
     rts
-
-
 
 vgm_update
     lda vgm_play_flag
@@ -146,8 +143,6 @@ add_delay
 
 end
     rts
-
-
 
 mac_key_off .macro  channel
     lda #\channel

@@ -16,7 +16,6 @@ clut_load_0
     lda >#CLUT_0_ADDR
     sta POINTER_CLUT_DEST+1
 
-
     ldx #0
 _clut_row
     ldy #0
@@ -32,7 +31,6 @@ _clut_loop
     iny
     lda (POINTER_CLUT_SRC),y
     sta (POINTER_CLUT_DEST),y
-
 
     lda POINTER_CLUT_SRC
     clc
@@ -58,7 +56,6 @@ _clut_loop
 
     stz MMU_IO_CTRL
     rts
-
 
 clut_load_1
     lda #5
@@ -94,7 +91,6 @@ _clut_loop
     lda (POINTER_CLUT_SRC),y
     sta (POINTER_CLUT_DEST),y
 
-
     lda POINTER_CLUT_SRC
     clc
     adc #4
@@ -121,7 +117,6 @@ _clut_loop
     sta MMU_IO_CTRL
     rts
 
-
 clut_load_2
     lda #5
     sta mem_bank
@@ -140,7 +135,6 @@ clut_load_2
     lda >#CLUT_2_ADDR
     sta POINTER_CLUT_DEST+1
 
-
     ldx #0
 _clut_row
     ldy #0
@@ -156,7 +150,6 @@ _clut_loop
     iny
     lda (POINTER_CLUT_SRC),y
     sta (POINTER_CLUT_DEST),y
-
 
     lda POINTER_CLUT_SRC
     clc
@@ -202,7 +195,6 @@ _clut_loop
         lda >#CLUT_3_ADDR
         sta POINTER_CLUT_DEST+1
 
-
         ldx #0
     _clut_row
         ldy #0
@@ -218,7 +210,6 @@ _clut_loop
         iny
         lda (POINTER_CLUT_SRC),y
         sta (POINTER_CLUT_DEST),y
-
 
         lda POINTER_CLUT_SRC
         clc

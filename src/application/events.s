@@ -17,7 +17,6 @@ handle_events
  _done
         ; Continue until the queue is drained.
 
-
     bra		handle_events
     rts
 

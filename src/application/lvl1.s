@@ -53,7 +53,7 @@ _yes:
 
 lvl1_load_data
     ;init variables
-    jsr init_pumkin
+    jsr init_pumpkin
     lda #0
     sta m_x_scroll_tile
     sta v_sync
@@ -115,7 +115,6 @@ lvl1_load_data
     sta TILE_MAP0_ATTR + 10
     sta TILE_MAP0_ATTR + 11
 
-
     lda <#SET_ADDR
     sta $D280
     lda >#SET_ADDR
@@ -125,15 +124,24 @@ lvl1_load_data
     lda #%00001000
     sta $D283
 
-
     ;lda #%00001000
     ;sta MMU_IO_CTRL
     jsr set_frame_timer
     rts
 
 scroll_lvl1_map
+    lda m_lvl1_speed
+    cmp #1
+    beq _set_speed_2x
+    lda #1
+    sta m_lvl1_speed
+    bra _move
+_set_speed_2x
+    lda #2
+    sta m_lvl1_speed
+_move
     jsr handle_jump
-    jsr  handle_pumkin
+    jsr  handle_pumpkin
     jsr is_joy_a_right_pressed
     bcc _move_right
     jsr is_d_pressed
@@ -146,6 +154,10 @@ scroll_lvl1_map
 _move_right
     lda #DIR_RT
     sta m_p1_direction
+    lda m_lvl1_speed
+    cmp #2
+    beq _move_double_right
+    jsr move_right
     jsr move_right
     rts
 _move_double_right
@@ -155,6 +167,14 @@ _move_double_right
 _move_left
     lda #DIR_LF
     sta m_p1_direction
+    lda m_lvl1_speed
+    cmp #2
+    beq _move_double_left
+    jsr move_left
+     jsr move_left
+    rts
+_move_double_left
+    jsr move_left
     jsr move_left
     rts
 
@@ -294,6 +314,8 @@ _do_scroll:
 m_lvl1_semaphore
     .byte 0
 m_lvl1_state
+    .byte 0
+m_lvl1_speed
     .byte 0
 
 .endsection

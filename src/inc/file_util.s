@@ -21,7 +21,6 @@ _set_len
     lda POINTER_FILE + 1
 	sta kernel.args.file.open.fname + 1
 
-
     lda #0 ; read
     sta kernel.args.file.open.mode
     lda #0 ; drive number 0 = sd card
@@ -140,7 +139,6 @@ fclose
     jmp kernel.File.Close
     rts
 
-
 sum_bytes_read
     lda bytes_received
 	clc
@@ -150,7 +148,6 @@ sum_bytes_read
 	lda bytes_received + 1
 	adc #0
 	sta bytes_received + 1
-
 
 	lda bytes_received + 1
 	cmp #$c0
@@ -205,8 +202,6 @@ tbl_block_bank
 	.byte $40, $48, $50, $58, $60, $68, $70, $78
 	; hi ram
 	.byte $80, $88, $90, $98
-
-
 
 bytes_received
     .byte 0,0

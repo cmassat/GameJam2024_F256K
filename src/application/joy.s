@@ -9,7 +9,6 @@ JOY_BUTTON_0        = %11101111
 JOY_BUTTON_1        = %11011111
 JOY_BUTTON_2        = %10111111
 
-
 JOY_UP_MASK         = %00000001
 JOY_DOWN_MASK       = %00000010
 JOY_LEFT_MASK       = %00000100
@@ -17,7 +16,6 @@ JOY_RIGHT_MASK      = %00001000
 JOY_BUTTON_0_MASK   = %00010000
 JOY_BUTTON_1_MASK   = %00100000
 JOY_BUTTON_2_MASK   = %01000000
-
 
 handle_joy_ports
     stz MMU_IO_CTRL
@@ -124,7 +122,6 @@ joy_result
 _yes
     clc
     rts
-
 
 JOY_PORT_B_DATA
     .byte 0

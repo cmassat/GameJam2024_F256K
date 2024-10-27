@@ -6,173 +6,196 @@ NPC_SPR_PMK_2 = NPC_SPR_PMK_1 + (16 * 16)
 NPC_SPR_PMK_3 = NPC_SPR_PMK_2 + (16 * 16)
 NPC_SPR_PMK_4 = NPC_SPR_PMK_3 + (16 * 16)
 NPC_SPR_PMK_5 = NPC_SPR_PMK_4 + (16 * 16)
-PUMKIN_FLOOR =  240-16
+pumpkin_FLOOR =  240-16
 .endsection
 
 .section code
-init_pumkin
+init_pumpkin
     lda #0
-    sta m_pumkin_v_sync
-    sta m_pumkin_frame
+    sta m_pumpkin_v_sync
+    sta m_pumpkin_frame
     rts
 
-handle_pumkin
-    jsr animate_pumkin
-    jsr show_pumkin
+handle_pumpkin
+    jsr animate_pumpkin
+    jsr show_pumpkin
     rts
 
-animate_pumkin
-    inc m_pumkin_v_sync
-    lda m_pumkin_v_sync
+animate_pumpkin
+    inc m_pumpkin_v_sync
+    lda m_pumpkin_v_sync
     cmp #15
     bcs _set_frame
     rts
 _set_frame
-    stz m_pumkin_v_sync
-    lda m_pumkin_frame
+    stz m_pumpkin_v_sync
+    lda m_pumpkin_frame
     cmp #5
     bcc _next_frame
-    stz m_pumkin_frame
+    stz m_pumpkin_frame
     rts
 _next_frame
-    inc m_pumkin_frame
+    inc m_pumpkin_frame
    rts
 
-show_pumkin
-    inc m_pumkin_v_sync
-    lda m_pumkin_tile
+show_pumpkin
+    inc m_pumpkin_v_sync
+    lda m_pumpkin_tile
     jsr get_tile_pixel_x
     bcc _ok
     rts
 _ok
-    lda #<PUMKIN_FLOOR
+    lda #<pumpkin_FLOOR
     sta m_set_y
-    lda #>PUMKIN_FLOOR
+    lda #>pumpkin_FLOOR
     sta m_set_y + 1
     #set_npc SPR_CTRL_01
     ;#set_sprite_addr SPR_CTRL_01, NPC_SPR_PMK_4
     #set_npc_xy SPR_CTRL_01
-    jsr pumkin_fr0
-    jsr pumkin_fr1
-    jsr pumkin_fr2
-    jsr pumkin_fr3
-    jsr pumkin_fr4
-    jsr pumkin_fr5
+    jsr pumpkin_fr0
+    jsr pumpkin_fr1
+    jsr pumpkin_fr2
+    jsr pumpkin_fr3
+    jsr pumpkin_fr4
+    jsr pumpkin_fr5
     rts
 
-pumkin_fr0
-    lda m_pumkin_frame
+pumpkin_fr0
+    lda m_pumpkin_frame
     cmp #0
     beq _ok
     rts
 _ok
     #set_sprite_addr SPR_CTRL_01, NPC_SPR_PMK_0
-    lda m_pumkin_tile
+    lda m_pumpkin_tile
     jsr get_tile_pixel_x
-    lda #<PUMKIN_FLOOR
+    lda #<PUMPKIN_FLOOR
     sta m_set_y
-    lda #>PUMKIN_FLOOR
+    sta m_pumpkin_y
+    lda #>PUMPKIN_FLOOR
+    sta m_pumpkin_y +1
     sta m_set_y + 1
     #set_npc_xy SPR_CTRL_01
     rts
 
-pumkin_fr1
-    lda m_pumkin_frame
+pumpkin_fr1
+    lda m_pumpkin_frame
     cmp #1
     beq _ok
     rts
 _ok
     #set_sprite_addr SPR_CTRL_01, NPC_SPR_PMK_1
-    lda m_pumkin_tile
+    lda m_pumpkin_tile
     jsr get_tile_pixel_x
-    lda #<PUMKIN_FLOOR
+    lda #<pumpkin_FLOOR
     sec
     sbc #4
+	sta m_pumpkin_y
     sta m_set_y
-    lda #>PUMKIN_FLOOR
+    lda #>pumpkin_FLOOR
     sbc #0
+	sta m_pumpkin_y + 1
     sta m_set_y + 1
     #set_npc_xy SPR_CTRL_01
     rts
 
-pumkin_fr2
-    lda m_pumkin_frame
+pumpkin_fr2
+    lda m_pumpkin_frame
     cmp #2
     beq _ok
     rts
 _ok
     #set_sprite_addr SPR_CTRL_01, NPC_SPR_PMK_2
-    lda m_pumkin_tile
+    lda m_pumpkin_tile
     jsr get_tile_pixel_x
-    lda #<PUMKIN_FLOOR
+    lda #<pumpkin_FLOOR
     sec
     sbc #8
     sta m_set_y
-    lda #>PUMKIN_FLOOR
+	sta m_pumpkin_y
+    lda #>pumpkin_FLOOR
     sbc #0
+	sta m_pumpkin_y + 1
     sta m_set_y + 1
     #set_npc_xy SPR_CTRL_01
 
     rts
-pumkin_fr3
-    lda m_pumkin_frame
+pumpkin_fr3
+    lda m_pumpkin_frame
     cmp #3
     beq _ok
     rts
 _ok
     #set_sprite_addr SPR_CTRL_01, NPC_SPR_PMK_3
-    lda m_pumkin_tile
+    lda m_pumpkin_tile
     jsr get_tile_pixel_x
-    lda #<PUMKIN_FLOOR
+    lda #<pumpkin_FLOOR
     sec
     sbc #8
     sta m_set_y
-    lda #>PUMKIN_FLOOR
+	sta m_pumpkin_y
+    lda #>pumpkin_FLOOR
     sbc #0
+	sta m_pumpkin_y + 1
     sta m_set_y + 1
     #set_npc_xy SPR_CTRL_01
     rts
-pumkin_fr4
-    lda m_pumkin_frame
+pumpkin_fr4
+    lda m_pumpkin_frame
     cmp #4
     beq _ok
     rts
 _ok
 
     #set_sprite_addr SPR_CTRL_01, NPC_SPR_PMK_4
-    lda m_pumkin_tile
+    lda m_pumpkin_tile
     jsr get_tile_pixel_x
-    lda #<PUMKIN_FLOOR
+    lda #<pumpkin_FLOOR
     sec
     sbc #4
+	sta m_pumpkin_y
     sta m_set_y
-    lda #>PUMKIN_FLOOR + 4
+    lda #>pumpkin_FLOOR + 4
     sbc #0
+	sta m_pumpkin_y + 1
     sta m_set_y + 1
     #set_npc_xy SPR_CTRL_01
     rts
-pumkin_fr5
-    lda m_pumkin_frame
+pumpkin_fr5
+    lda m_pumpkin_frame
     cmp #5
     beq _ok
     rts
 _ok
     #set_sprite_addr SPR_CTRL_01, NPC_SPR_PMK_5
-    lda m_pumkin_tile
+    lda m_pumpkin_tile
     jsr get_tile_pixel_x
-    lda #<PUMKIN_FLOOR
+    lda #<pumpkin_FLOOR
+	sta m_pumpkin_y
     sta m_set_y
-    lda #>PUMKIN_FLOOR
+    lda #>pumpkin_FLOOR
     sta m_set_y + 1
+	sta m_pumpkin_y + 1
     #set_npc_xy SPR_CTRL_01
     rts
 
+pumpkin_collision
+    lda m_pumpkin_tile
+    jsr get_tile_pixel_x
+
+
+
+    rts
 .endsection
 .section variables
-m_pumkin_tile
+m_pumpkin_tile
     .byte 25
-m_pumkin_v_sync
+m_pumpkin_v_sync
     .byte 0
-m_pumkin_frame
+m_pumpkin_frame
     .byte 0
+m_pumpkin_x
+    .byte 0,0
+m_pumpkin_y
+    .byte 0,0
 .endsection

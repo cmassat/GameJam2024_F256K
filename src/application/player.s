@@ -266,7 +266,6 @@ _left
     #set_sprite_addr SPR_CTRL_00,  PC1_SPR_WLK_L3
     rts
 
-
 player_fr4
     lda m_p1_direction
     cmp #DIR_RT

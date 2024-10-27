@@ -1,7 +1,6 @@
 ;.section code
 USEBANK = 5 ; set to configure which bank to use for reading extended memory
 
-
 mmu_seekaddr
     .byte 0,0,0 ; exported, linear extended memory address for mmu_seek
 oldmmu
@@ -154,7 +153,6 @@ mmu_clear_ext_mem
     sta POINTER_MMU
     lda m_mmu_clear + 1
     sta POINTER_MMU + 1
-
 
     lda #8
     sta mem_bank
