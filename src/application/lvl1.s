@@ -3,11 +3,14 @@ LVL1_LOAD_DATA_STATE = $1
 LVL1_SCROLL_MAP_STATE = $2
 
 handle_lvl1
-    lda m_is_collided
-    cmp #0
-    beq _no_collission
-    rts
+	jsr is_collided
+	bcc _collission
+	bra _no_collission
+_collission
+	#disable_sprite SPR_CTRL_00
+	rts
 _no_collission
+	
     lda #STATE_LVL1
     jsr is_state
     bcc _yes
@@ -56,43 +59,28 @@ _yes:
     jsr disable_video
     rts
 
-lvl1_load_data
-    ;init variables
-    jsr init_pumpkin
+init_lvl1_data
+	inc m_collide_debug
+	jsr print_scroll
+	jsr init_pc1
+	jsr init_pumpkin
     lda #0
     sta m_x_scroll_tile
     sta v_sync
     sta m_x_scroll_pxl
+	sta m_check_x_tile
+	sta m_temp
     sta TILE_MAP1_ATTR
     sta TILE_MAP2_ATTR
     sta m_do_scroll_tile
-    ;load data
-    jsr load_lvl1_set
-    jsr load_lvl1_pal
-    jsr clut_load_0
-    jsr load_lvl1_map
-    jsr load_lvl1_bak_bin
-    jsr load_lvl1_bak_pal
-    jsr clut_load_1
-    jsr load_sprite_bin
-    jsr load_sprite_pal
-    jsr clut_load_2
-    jsr init_pc1
-    jsr play_lvl1_mus
-;	jsr set_frame_timer
-    lda #0
-    sta MMU_IO_CTRL
-    ;SET Layers
+
+	 ;SET Layers
     lda #$04
     sta $D002
     lda #$04
     sta $D003
 
-    jsr set_video_to_game_mode
-    lda #0
-    sta MMU_IO_CTRL
-
-    ;SETUP bmp location
+	  ;SETUP bmp location
     lda #%00000011
     sta $D100
     lda <#BMP_ADDR
@@ -129,13 +117,55 @@ lvl1_load_data
     lda #%00001000
     sta $D283
 
+	stz m_x_scroll_pxl
+	stz m_x_scroll_tile
+	rts
+
+lvl1_load_data
+    ;init variables
+    jsr init_lvl1_data
+    ;load data
+    jsr load_lvl1_set
+    jsr load_lvl1_pal
+    jsr clut_load_0
+    jsr load_lvl1_map
+    jsr load_lvl1_bak_bin
+    jsr load_lvl1_bak_pal
+    jsr clut_load_1
+    jsr load_sprite_bin
+    jsr load_sprite_pal
+    jsr clut_load_2
+    jsr init_pc1
+    jsr play_lvl1_mus
+;	jsr set_frame_timer
+    ;lda #0
+    ;sta MMU_IO_CTRL
+   
+
+    jsr set_video_to_game_mode
+    lda #0
+    sta MMU_IO_CTRL
+
+  
+
     ;lda #%00001000
     ;sta MMU_IO_CTRL
     jsr set_frame_timer
     rts
 
-scroll_lvl1_map
+lvl1_reset_map
+	jsr init_lvl1_data
+	jsr collide_reset
+	rts 
 
+scroll_lvl1_map
+	jsr do_reset
+	bcc _reset_level
+	bra _play_level
+_reset_level
+	jsr lvl1_reset_map
+	rts
+_play_level 
     lda m_lvl1_speed
     cmp #1
     beq _set_speed_2x
@@ -278,7 +308,6 @@ _move:
 
 scroll_pixels_left
     stz MMU_IO_CTRL
-    jsr print_scroll
     lda m_x_scroll_pxl
     cmp #0
     bne _do_scroll
@@ -295,7 +324,6 @@ _do_scroll:
 
 scroll_pixel
     stz MMU_IO_CTRL
-    jsr print_scroll
     lda m_x_scroll_pxl
     cmp #15
     bne _do_scroll

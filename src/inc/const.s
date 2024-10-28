@@ -26,6 +26,16 @@ SPR_CTRL_08 = SPR_CTRL_07 + 8
 SPR_CTRL_09 = SPR_CTRL_08 + 8
 SPR_CTRL_10 = SPR_CTRL_09 + 8
 SPR_CTRL_11 = SPR_CTRL_10 + 8
+SPR_CTRL_12 = SPR_CTRL_11 + 8
+SPR_CTRL_13 = SPR_CTRL_12 + 8
+SPR_CTRL_14 = SPR_CTRL_13 + 8
+SPR_CTRL_15 = SPR_CTRL_14 + 8
+SPR_CTRL_16 = SPR_CTRL_15 + 8
+SPR_CTRL_17 = SPR_CTRL_16 + 8
+SPR_CTRL_18 = SPR_CTRL_17 + 8
+SPR_CTRL_19 = SPR_CTRL_18 + 8
+SPR_CTRL_20 = SPR_CTRL_19 + 8
+SPR_CTRL_21 = SPR_CTRL_20 + 8
 
 BMP_ADDR = $6C000
 SET_ADDR = $5C000
@@ -76,7 +86,6 @@ ym_ch6_freq_m1 =  $2A
 ym_ch7_freq_m1 =  $30
 ym_ch8_freq_m1 =  $31
 ym_ch9_freq_m1 =  $32
-
 
 ym_ch1_freq_c1 =  $23
 ym_ch2_freq_c1 =  $24
@@ -134,7 +143,6 @@ ym_ch6_ad_c1 =  $6d
 ym_ch7_ad_c1 =  $73
 ym_ch8_ad_c1 =  $74
 ym_ch9_ad_c1 =  $75
-
 
 ;| 07 | 06 | 05 | 04 | 03 | 02 | 01 | 00 |
 ;| sustain           |  release
@@ -221,7 +229,6 @@ ym_ch6_fb = $C5
 ym_ch7_fb = $C6
 ym_ch8_fb = $C7
 ym_ch9_fb = $C9
-
 
 ;GLOBAL
 ym_test = $01

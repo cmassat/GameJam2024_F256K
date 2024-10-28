@@ -46,10 +46,10 @@ key_released
     rts
 handle_timer_event
     jsr sof_vgm
-	jsr print_scroll
 	jsr handle_joy_ports
-	jsr set_frame_timer
+	jsr handle_collision
 	stz sof_semaphore
+	jsr set_frame_timer
    rts
 
 set_frame_timer

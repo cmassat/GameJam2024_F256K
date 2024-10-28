@@ -50,6 +50,12 @@ set_pc .macro SPR_NUM
     sta \SPR_NUM
     pla
 .endmacro
+
+disable_sprite .macro SPR_NUM
+	lda #0
+	sta \SPR_NUM
+.endmacro
+
 ;a register spritenumber
 set_npc_xy .macro SPR_NUM
     lda m_set_x

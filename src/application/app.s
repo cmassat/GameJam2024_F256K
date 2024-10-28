@@ -14,3 +14,4 @@
 .include "kbd.s"
 .include "tile.s"
 .include "player.s"
+.include "collision.s"

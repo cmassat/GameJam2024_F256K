@@ -15,10 +15,11 @@ PC1_SPR_WLK_L5 = PC1_SPR_WLK_L4 + $400
 FLOOR_LEVEL = 240-32
 PLAYER_X = 100
 .endsection
+
 .section code
+
 init_pc1
     #set_pc SPR_CTRL_00
-
     lda #<SPR32_ADDR
     sta SPR_CTRL_00 + 1
     lda #>SPR32_ADDR
