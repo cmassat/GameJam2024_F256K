@@ -11,6 +11,8 @@ _continue:
     lda keypress
     cmp #' '
     beq _change_state
+	jsr is_joy_a_btn_0_pressed
+	bcc _change_state
     rts
 _change_state
     stz keypress

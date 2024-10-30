@@ -60,7 +60,7 @@ _boom
 _animate
 	inc m_collide_vsync
 	lda m_collide_vsync
-	cmp #30
+	cmp #10
 	beq _increase_frame
 	rts
 _increase_frame

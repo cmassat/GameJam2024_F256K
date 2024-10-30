@@ -60,16 +60,18 @@ _yes:
     rts
 
 init_lvl1_data
-	inc m_collide_debug
-	jsr print_scroll
 	jsr init_pc1
 	jsr init_pumpkin
+	jsr init_pumpkin2
+	jsr init_cauldron
+	jsr init_cauldron2
+	jsr init_candy
+	jsr init_candy2
+	jsr init_snack
     lda #0
     sta m_x_scroll_tile
     sta v_sync
     sta m_x_scroll_pxl
-	sta m_check_x_tile
-	sta m_temp
     sta TILE_MAP1_ATTR
     sta TILE_MAP2_ATTR
     sta m_do_scroll_tile
@@ -176,7 +178,13 @@ _set_speed_2x
     lda #2
     sta m_lvl1_speed
 _move
+	;jsr handle_candy
+	;jsr handle_pumpkin2
+	;jsr handle_candy2
+	;jsr handle_cauldron
+	;jsr handle_cauldron2
     jsr handle_player_move
+	jsr handle_snack
     lda m_p1_direction
     cmp #DIR_RT
     beq _move_right
@@ -185,6 +193,13 @@ _move
     rts
 
 _move_right
+	lda m_x_scroll_tile
+    cmp #60
+    bcc _ok_to_scroll
+	jsr init_cauldron
+	jsr init_cauldron2
+    rts
+_ok_to_scroll
     lda m_lvl1_speed
     cmp #2
     beq _move_double_right
@@ -200,7 +215,7 @@ _move_left
     cmp #2
     beq _move_double_left
     jsr move_left
-     jsr move_left
+    jsr move_left
     rts
 _move_double_left
     jsr move_left
@@ -211,6 +226,8 @@ move_left
     lda m_x_scroll_tile
     cmp #0
     bne _ok_to_scroll
+	jsr init_cauldron
+	jsr init_cauldron2
     rts
 _ok_to_scroll
     jsr handle_pc1_animation

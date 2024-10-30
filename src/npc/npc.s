@@ -1,1 +1,7 @@
 .include "pumpkin.s"
+.include "pumpkin2.s"
+.include "cauldron.s"
+.include "cauldron2.s"
+.include "candy.s"
+.include "candy2.s"
+.include "snack.s"

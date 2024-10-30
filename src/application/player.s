@@ -58,16 +58,16 @@ _increase_frame
 
 handle_player_move
     jsr handle_jump
-    jsr  handle_pumpkin
-    jsr is_joy_a_right_pressed
-    bcc _move_right
+    jsr handle_pumpkin
+    ;jsr is_joy_a_right_pressed
+    ;bcc _move_right
     jsr is_d_pressed
     bcc _move_right
 
     jsr is_a_pressed
     bcc _move_left
-    jsr is_joy_a_left_pressed
-    bcc _move_left
+    ;jsr is_joy_a_left_pressed
+    ;bcc _move_left
     lda #DIR_DN
     sta m_p1_direction
     rts
@@ -84,8 +84,8 @@ handle_jump
     lda  m_jump_lock
     cmp #1
     beq _jumping
-    jsr is_joy_a_btn_0_pressed
-    bcc _jump
+    ;jsr is_joy_a_btn_0_pressed
+    ;bcc _jump
     jsr is_j_pressed
     bcc _jump
     rts
@@ -166,59 +166,59 @@ _skip
 .endmacro
 
 jump_frm_0
-    #jump_frame 2, 0
+    #jump_frame 3, 0
     rts
 jump_frm_1
-    #jump_frame 4, 1
+    #jump_frame 6, 1
     rts
 jump_frm_2
-    #jump_frame 6, 2
+    #jump_frame 9, 2
     rts
 jump_frm_3
-    #jump_frame 8, 3
+    #jump_frame 12, 3
     rts
 jump_frm_4
-    #jump_frame 10, 4
+    #jump_frame 15, 4
     rts
 jump_frm_5
-    #jump_frame 12, 5
+    #jump_frame 18, 5
     rts
 jump_frm_6
-    #jump_frame 14, 6
+    #jump_frame 21, 6
 rts
 
 jump_frm_7
-    #jump_frame 16, 7
+    #jump_frame 23, 7
 rts
 jump_frm_8
-    #jump_frame 18, 8
+    #jump_frame 26, 8
 rts
 jump_frm_9
-    #jump_frame 18, 9
+    #jump_frame 26, 9
 rts
 jump_frm_10
-    #jump_frame 16, 10
+    #jump_frame 23, 10
 rts
 jump_frm_11
-    #jump_frame 14, 11
+    #jump_frame 21, 11
 rts
 jump_frm_12
-    #jump_frame 12, 12
+    #jump_frame 18, 12
 rts
 jump_frm_13
-    #jump_frame 10, 13
+    #jump_frame 15, 13
 rts
 jump_frm_14
-    #jump_frame 8, 14
+    #jump_frame 12, 14
 rts
 jump_frm_15
-    #jump_frame 6, 15
+    #jump_frame 9, 15
 rts
 jump_frm_16
-    #jump_frame 4, 16
+    #jump_frame 6, 16
 rts
 jump_frm_17
-    #jump_frame 2, 17
+    #jump_frame 3, 17
 rts
 jump_frm_18
     #jump_frame 0, 18
@@ -362,6 +362,26 @@ _left
     #set_sprite_addr SPR_CTRL_00,  PC1_SPR_WLK_L5
     rts
 
+create_player_hitbox
+	;get hit box of snack
+	lda m_p1_x
+	clc 
+	adc #32
+	sta m_p1_x_end
+
+	lda m_p1_x +1
+	adc #0
+	sta m_p1_x_end + 1
+
+	lda m_p1_y
+	clc 
+	adc #32
+	sta m_p1_y_end
+
+	lda m_p1_y +1
+	adc #0
+	sta m_p1_y_end + 1
+	rts 
 .endsection
 .section variables
 m_p1_direction
@@ -369,6 +389,10 @@ m_p1_direction
 m_p1_x
     .byte 0,0
 m_p1_y
+    .byte 0,0
+m_p1_x_end 
+    .byte 0,0
+m_p1_y_end
     .byte 0,0
 m_jump_lock
     .byte 0

@@ -1,5 +1,6 @@
 
 .section variables
+PUMPKIN_SPR_NUM = SPR_CTRL_01
 NPC_SPR_PMK_0 = SPR16_ADDR + (16 * 16 * 40)
 NPC_SPR_PMK_1 = NPC_SPR_PMK_0 + (16 * 16)
 NPC_SPR_PMK_2 = NPC_SPR_PMK_1 + (16 * 16)
@@ -16,14 +17,8 @@ init_pumpkin
     sta m_pumpkin_frame
 	sta m_pumpkin_x
 	sta m_pumpkin_y
-	;lda m_pumpkin_tile
-	;jsr get_tile_pixel_x
-	;lda #<pumpkin_FLOOR
-    ;sta m_set_y
-    ;lda #>pumpkin_FLOOR
-    ;sta m_set_y + 1
     #set_npc SPR_CTRL_01
-    #set_npc_xy SPR_CTRL_01
+    #disable_sprite SPR_CTRL_01
     rts
 
 handle_pumpkin
@@ -50,18 +45,23 @@ _next_frame
 
 show_pumpkin
     inc m_pumpkin_v_sync
-	jsr get_tile_pixel_x
     lda m_pumpkin_tile
     jsr get_tile_pixel_x
+	
     bcc _ok
+	#disable_sprite SPR_CTRL_01
     rts
 _ok
+	#set_npc SPR_CTRL_01
     lda #<pumpkin_FLOOR
     sta m_set_y
     lda #>pumpkin_FLOOR
     sta m_set_y + 1
     #set_npc SPR_CTRL_01
     #set_npc_xy SPR_CTRL_01
+	lda m_pumpkin_tile
+    jsr get_tile_pixel_x
+	
     jsr pumpkin_fr0
     jsr pumpkin_fr1
     jsr pumpkin_fr2
@@ -95,14 +95,14 @@ pumpkin_fr1
     beq _ok
     rts
 _ok
-    #set_sprite_addr SPR_CTRL_01, NPC_SPR_PMK_1
+     #set_sprite_addr SPR_CTRL_01, NPC_SPR_PMK_1
     lda m_pumpkin_tile
     jsr get_tile_pixel_x
     lda #<pumpkin_FLOOR
     sec
     sbc #4
-	sta m_pumpkin_y
     sta m_set_y
+	sta m_pumpkin_y
     lda #>pumpkin_FLOOR
     sbc #0
 	sta m_pumpkin_y + 1

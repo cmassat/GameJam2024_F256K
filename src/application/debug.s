@@ -18,7 +18,7 @@ print_y_hi
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_collide_frame
+    lda m_collide_x_start +1
     lsr
     lsr
     lsr
@@ -28,7 +28,7 @@ print_y_hi
     lda (POINTER_TXT), y
     sta $C000
 
-    lda m_collide_frame
+    lda m_collide_x_start + 1
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -46,7 +46,7 @@ print_y_lo
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_collide_vsync
+    lda m_collide_x_start
     lsr
     lsr
     lsr
@@ -56,7 +56,7 @@ print_y_lo
     lda (POINTER_TXT), y
     sta $C002
 
-    lda m_collide_vsync
+    lda m_collide_x_start
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -74,7 +74,7 @@ print_pumpkin_y_hi
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_collide_debug
+    lda m_collide_x_end + 1
     lsr
     lsr
     lsr
@@ -84,7 +84,7 @@ print_pumpkin_y_hi
     lda (POINTER_TXT), y
     sta $C000 + 5
 
-    lda m_collide_debug
+    lda m_collide_x_end + 1
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -102,7 +102,7 @@ print_pumpkin_y_lo
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_pumpkin_y
+    lda m_collide_x_end
     lsr
     lsr
     lsr
@@ -112,7 +112,7 @@ print_pumpkin_y_lo
     lda (POINTER_TXT), y
     sta $C000 + 7
 
-    lda m_pumpkin_y
+    lda m_collide_x_end
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -130,7 +130,7 @@ print_collide_y_hi
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_collide_y_diff + 1
+    lda m_collide_y_start + 1
     lsr
     lsr
     lsr
@@ -140,7 +140,7 @@ print_collide_y_hi
     lda (POINTER_TXT), y
     sta $C000 + 80
 
-    lda m_collide_y_diff + 1
+    lda m_collide_y_start + 1
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -157,7 +157,7 @@ print_collide_y_lo
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_collide_y_diff
+    lda m_collide_y_start
     lsr
     lsra
     lsr
@@ -167,7 +167,7 @@ print_collide_y_lo
     lda (POINTER_TXT), y
     sta $C000 + 82
 
-    lda m_collide_y_diff
+    lda m_collide_y_start
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -185,7 +185,7 @@ print_collide
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_is_collided
+    lda m_collide_y_end + 1
     lsr
     lsr
     lsr
@@ -195,11 +195,40 @@ print_collide
     lda (POINTER_TXT), y
     sta $C000 + 85
 
-    lda m_is_collided
+    lda m_collide_y_end + 1
     and #$0f
     tay
     lda (POINTER_TXT), y
     sta $C000 + 86
+
+    stz MMU_IO_CTRL
+	jsr print_collide1
+    rts
+
+print_collide1
+    lda #2
+    sta MMU_IO_CTRL
+
+    lda <#hex_values
+    sta POINTER_TXT
+    lda >#hex_values
+    sta POINTER_TXT + 1
+
+    lda m_collide_y_end
+    lsr
+    lsr
+    lsr
+    lsr
+    and #$0f
+    tay
+    lda (POINTER_TXT), y
+    sta $C000 + 87
+
+    lda m_collide_y_end
+    and #$0f
+    tay
+    lda (POINTER_TXT), y
+    sta $C000 + 88
 
     stz MMU_IO_CTRL
     rts
