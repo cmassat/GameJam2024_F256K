@@ -32,7 +32,8 @@ mac_gem_handle .macro SPRITE_CTRL, TILE_NUM, SPRITE_NUM
 	stx m_gem_start_x + 1
 	bcs _do_not_show
 	
-	lda m_gem_enabled, y
+	ldy #\SPRITE_NUM
+    lda m_gem_enabled, y
 	cmp #0
 	bne _do_not_show
 	#set_npc \SPRITE_CTRL
@@ -55,7 +56,6 @@ _check_collision
 	stz d_do_not_show
 	jsr is_collision
 	bcc _gem_collided
-	
 	bra _skip
 _gem_collided
 	lda #1
@@ -69,7 +69,6 @@ _gem_collided
 _skip
 
 .endmacro
-
 
 init_gem_0
 	#mac_gem_init GEM_00_SPR_CTRL, GEM_00_SPR_ADDR
@@ -98,7 +97,7 @@ handle_gem_1
 	rts 
 	
 handle_gems
-	;jsr handle_gem_collision_animation
+	jsr handle_gem_collision_animation
 	jsr handle_gem_0
 	jsr handle_gem_1
 	jsr print_scroll
@@ -252,33 +251,8 @@ determine_collision_x_start
 	jsr fn_collision
 	sta m_gem_collide_start_x
 	stx m_gem_collide_start_x + 1
-;	lda m_gem_start_x
-;	sec
-;	sbc m_p1_x
-;	sta m_gem_collide_start_x
-;
-;	lda m_gem_start_x + 1
-;	sbc m_p1_x + 1
-;	sta m_gem_collide_start_x + 1
-;	lda m_gem_collide_start_x + 1
-;	and #%10000000
-;	cmp #%10000000
-;	beq _is_neg
-;	rts
-;_is_neg
-;	lda m_gem_collide_start_x + 1
-;	eor #$ff
-;	sta m_gem_collide_start_x + 1
-;
-;	lda m_gem_collide_start_x
-;	eor #$ff
-;	sta m_gem_collide_start_x
-;	clc 
-;	lda m_gem_collide_start_x
-;	adc #1
-;	sta m_gem_collide_start_x
-;	rts
-;
+    rts
+
 determine_collision_x_end
 	lda m_gem_end_x 
 	sta m_gem_n
@@ -289,26 +263,6 @@ determine_collision_x_end
 	jsr fn_collision
 	sta m_gem_collide_end_x
 	stx m_gem_collide_end_x + 1
-;	lda m_gem_end_x
-;	sec 
-;	sbc m_p1_x_end 
-;	sta m_gem_collide_end_x
-;
-;	lda m_gem_end_x + 1
-;	sbc m_p1_x_end + 1
-;	sta m_gem_collide_end_x + 1
-;	and #%10000000
-;	cmp #%10000000
-;	beq _is_neg
-;	rts
-;_is_neg
-;	lda m_gem_collide_end_x + 1
-;	eor #$ff
-;	sta m_gem_collide_end_x + 1
-;
-;	lda m_gem_collide_end_x
-;	eor #$ff
-;	sta m_gem_collide_end_x
 	rts
 
 determine_collision_y_start
@@ -321,32 +275,6 @@ determine_collision_y_start
 	jsr fn_collision
 	sta m_gem_collide_start_y
 	stx m_gem_collide_start_y + 1
-;	lda m_gem_start_y
-;	sec
-;	sbc m_p1_y
-;	sta m_gem_collide_start_y
-;
-;	lda m_gem_start_y + 1
-;	sbc m_p1_y + 1
-;	sta m_gem_collide_start_y + 1
-;	lda m_gem_collide_start_y + 1
-;	and #%10000000
-;	cmp #%10000000
-;	beq _is_neg
-;	rts
-;_is_neg
-;	lda m_gem_collide_start_y + 1
-;	eor #$ff
-;	sta m_gem_collide_start_y + 1
-;
-;	lda m_gem_collide_start_y
-;	eor #$ff
-;	sta m_gem_collide_start_y
-;
-;	lda m_gem_collide_start_y
-;	clc
-;	adc #1
-;	sta m_gem_collide_start_y
 	rts
 
 determine_collision_y_end
@@ -359,29 +287,6 @@ determine_collision_y_end
 	jsr fn_collision
 	sta m_gem_collide_end_y
 	stx m_gem_collide_end_y + 1
-;	sbc m_p1_y_end + 1
-;	sta m_gem_collide_start_y + 1
-;	lda m_gem_collide_start_y + 1
-;	and #%10000000
-;	cmp #%10000000
-;	beq _is_neg
-;	lda m_gem_collide_start_y
-;	clc
-;	adc #1
-;	sta m_gem_collide_start_y
-;	rts
-;_is_neg
-;	lda m_gem_collide_start_y + 1
-;	eor #$ff
-;	sta m_gem_collide_start_y + 1
-;
-;	lda m_gem_collide_start_y
-;	eor #$ff
-;	sta m_gem_collide_start_y
-;	lda m_gem_collide_start_y
-;	clc
-;	adc #1
-;	sta m_gem_collide_start_y
 	rts
 
 increase_snack_pointer

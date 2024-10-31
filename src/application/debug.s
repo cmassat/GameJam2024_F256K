@@ -29,7 +29,7 @@ print_y_hi
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_gem_collide_start_y + 1
+    lda m_show_gem_collision
     lsr
     lsr
     lsr
@@ -39,7 +39,7 @@ print_y_hi
     lda (POINTER_TXT), y
     sta $C000
 
-    lda m_gem_collide_start_y + 1
+    lda m_show_gem_collision
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -57,7 +57,7 @@ print_y_lo
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_gem_collide_start_y
+    lda m_tile_gem_collision
     lsr
     lsr
     lsr
@@ -67,7 +67,7 @@ print_y_lo
     lda (POINTER_TXT), y
     sta $C002
 
-    lda m_gem_collide_start_y
+    lda m_tile_gem_collision
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -85,7 +85,7 @@ print_pumpkin_y_hi
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_gem_collide_end_y + 1
+    lda d_debug_gemfb
     lsr
     lsr
     lsr
@@ -95,7 +95,7 @@ print_pumpkin_y_hi
     lda (POINTER_TXT), y
     sta $C005
 
-    lda m_gem_collide_end_y + 1
+    lda d_debug_gemfb
     and #$0f
     tay
     lda (POINTER_TXT), y

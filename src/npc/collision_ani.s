@@ -3,10 +3,29 @@
 	SPR_SNACK_FEEDBACK1 = SPR_SNACK_FEEDBACK0 + (16 * 16)
 	SPR_SNACK_FEEDBACK2 = SPR_SNACK_FEEDBACK1 + (16 * 16)
 	SPR_SNACK_FEEDBACK3 = SPR_SNACK_FEEDBACK2 + (16 * 16)
-	SPR_NUM = 60
+	GEMFB_00_SPR_CTRL  = SPR_00_CTRL + (60 * 8)
+
 .endsection
 
-.section code 
+.section code
+
+gem_fb_init
+    #set_npc GEMFB_00_SPR_CTRL
+    #set_sprite_addr GEMFB_00_SPR_CTRL, SPR_SNACK_FEEDBACK0
+    rts
+
+sub_gemfb_set_xy
+	lda m_tile_gem_collision
+	jsr get_tile_x_for_gem
+	sta m_set_x
+	stx m_set_x + 1
+	lda #<GEM_CEILING
+	sta m_set_y
+	lda #>GEM_CEILING
+	sta m_set_y + 1
+	#set_sprite_xy GEMFB_00_SPR_CTRL
+rts
+
 handle_gem_collision_animation
 	lda m_show_gem_collision
 	cmp #1
@@ -16,18 +35,13 @@ _animate
 	lda m_init_fb_ani
 	cmp #1
 	beq _animate_frames
-	lda #SPR_NUM
-	jsr set_sprite_number
-	jsr set_sprite_enable16
-
-	lda #<SPR_SNACK_FEEDBACK0
-	ldx #>SPR_SNACK_FEEDBACK0
-	ldy #`SPR_SNACK_FEEDBACK0
-	jsr set_sprite_address
-	inc m_init_fb_ani
+	inc d_debug_gemfb
+	jsr gem_fb_init
+	jsr sub_gemfb_set_xy
+    lda #1
+	sta m_init_fb_ani
 _animate_frames
-	jsr fb_set_tile_x_y
-	#set_sprite_xy SPR_NUM
+	jsr sub_gemfb_set_xy
 	inc m_ani_fb_vsync
 	lda m_ani_fb_vsync
 	cmp #8
@@ -39,8 +53,7 @@ _next_frame
 	lda m_ani_fb_frames
 	cmp #5
 	beq _finished 
-	lda #SPR_NUM
-	jsr set_sprite_number
+
 	jsr set_sprite_enable16
 	jsr fb_ani_fr0
 	jsr fb_ani_fr1
@@ -51,20 +64,15 @@ _finished
 	stz m_ani_fb_frames
 	stz m_ani_fb_vsync
 	stz m_show_gem_collision
-	lda #SPR_NUM
-	jsr set_sprite_number
-	jsr set_sprite_disable
+	stz m_init_fb_ani
+	#disable_sprite GEMFB_00_SPR_CTRL
+
 	rts 
 fb_ani_fr0
 	lda m_ani_fb_frames
 	cmp #1
 	bne _end
-	lda #SPR_NUM
-	jsr set_sprite_number
-	lda #<SPR_SNACK_FEEDBACK0
-	ldx #>SPR_SNACK_FEEDBACK0
-	ldy #`SPR_SNACK_FEEDBACK0
-	jsr set_sprite_address
+	#set_sprite_addr GEMFB_00_SPR_CTRL, SPR_SNACK_FEEDBACK0
 	rts 
 _end 
 	rts 
@@ -82,12 +90,7 @@ fb_ani_fr1
 	lda m_ani_fb_frames
 	cmp #2
 	bne _end
-	lda #SPR_NUM
-	jsr set_sprite_number
-	lda #<SPR_SNACK_FEEDBACK1
-	ldx #>SPR_SNACK_FEEDBACK1
-	ldy #`SPR_SNACK_FEEDBACK1
-	jsr set_sprite_address
+	#set_sprite_addr GEMFB_00_SPR_CTRL, SPR_SNACK_FEEDBACK1
 	rts 
 _end 
 	rts 
@@ -96,12 +99,7 @@ fb_ani_fr2
 	lda m_ani_fb_frames
 	cmp #3
 	bne _end 
-	lda #SPR_NUM
-	jsr set_sprite_number
-	lda #<SPR_SNACK_FEEDBACK2
-	ldx #>SPR_SNACK_FEEDBACK2
-	ldy #`SPR_SNACK_FEEDBACK2
-	jsr set_sprite_address
+	#set_sprite_addr GEMFB_00_SPR_CTRL, SPR_SNACK_FEEDBACK2
 	rts 
 _end 
 	rts 
@@ -110,12 +108,7 @@ fb_ani_fr3
 	lda m_ani_fb_frames
 	cmp #4
 	bne _end 
-	lda #SPR_NUM
-	jsr set_sprite_number
-	lda #<SPR_SNACK_FEEDBACK3
-	ldx #>SPR_SNACK_FEEDBACK3
-	ldy #`SPR_SNACK_FEEDBACK3
-	jsr set_sprite_address
+	#set_sprite_addr GEMFB_00_SPR_CTRL, SPR_SNACK_FEEDBACK3
 	rts 
 _end 
 	rts 
@@ -125,4 +118,6 @@ _end
 	m_init_fb_ani .byte 0
 	m_ani_fb_vsync .byte 0
 	m_ani_fb_frames .byte 0
+	d_debug_gemfb
+		.byte 0
 .endsection
