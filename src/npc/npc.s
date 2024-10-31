@@ -4,4 +4,5 @@
 .include "cauldron2.s"
 .include "candy.s"
 .include "candy2.s"
-.include "snack.s"
+.include "gems.s"
+.include "collision_ani.s"

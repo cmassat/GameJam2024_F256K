@@ -28,7 +28,7 @@ init_cauldron
 
 handle_cauldron
 	lda m_cauldron_tile
-	jsr get_tile_pixel_x
+	;;jsr get_tile_pixel_x
 	bcc _move
 	#disable_sprite CAULDRON_SPR_NUM
 	
@@ -83,7 +83,7 @@ get_cauldron_xy
 	lda #>CAULDRON_FLOOR
 	sta m_set_y + 1
 	sta m_cauldron_y + 1
-	#set_npc_xy CAULDRON_SPR_NUM
+	#set_sprite_xy CAULDRON_SPR_NUM
 	rts 
 
 caudron_fr0
@@ -149,7 +149,7 @@ _do_not_check
 _do_check
 	jsr get_cauldron_xy
     ;lda m_cauldron_tile
-    ;jsr get_tile_pixel_x
+    ;;;jsr get_tile_pixel_x
     ;lda m_set_x
     ;sta m_pumpkin_x
     ;lda m_set_x + 1

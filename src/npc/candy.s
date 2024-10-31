@@ -10,7 +10,9 @@ NPC_SPR_CANDY_5 = NPC_SPR_CANDY_4 + (16 * 16)
 NPC_SPR_CANDY_6 = NPC_SPR_CANDY_5 + (16 * 16)
 .endsection
 
-.section code 
+.section code
+mac_init_gem .macro
+.endmacro 
 init_candy
 	lda #0
 	sta m_candy_v_sync
@@ -30,7 +32,7 @@ init_candy
 
 handle_candy
 	lda m_candy_tile
-	jsr get_tile_pixel_x
+	;jsr get_tile_pixel_x
 	bcc _move
 	#disable_sprite CANDY_SPR_NUM
 	rts 
@@ -84,7 +86,7 @@ get_candy_xy
 	lda #>candy_FLOOR
 	sta m_set_y + 1
 	sta m_candy_y + 1
-	#set_npc_xy CANDY_SPR_NUM
+	#set_sprite_xy CANDY_SPR_NUM
 	rts 
 
 candy_fr0
@@ -150,7 +152,7 @@ _do_not_check
 _do_check
 	jsr get_candy_xy
     ;lda m_candy_tile
-    ;jsr get_tile_pixel_x
+    ;;jsr get_tile_pixel_x
     ;lda m_set_x
     ;sta m_pumpkin_x
     ;lda m_set_x + 1

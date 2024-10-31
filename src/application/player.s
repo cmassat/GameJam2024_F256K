@@ -12,8 +12,8 @@ PC1_SPR_WLK_L2 = PC1_SPR_WLK_L1 + $400
 PC1_SPR_WLK_L3 = PC1_SPR_WLK_L2 + $400
 PC1_SPR_WLK_L4 = PC1_SPR_WLK_L3 + $400
 PC1_SPR_WLK_L5 = PC1_SPR_WLK_L4 + $400
-FLOOR_LEVEL = 240-32
-PLAYER_X = 100
+FLOOR_LEVEL = 208 ; $d0
+PL_TILE = 5
 .endsection
 
 .section code
@@ -26,12 +26,18 @@ init_pc1
     sta SPR_CTRL_00 + 2
     lda #`SPR32_ADDR
     sta SPR_CTRL_00 + 3
-    lda #100
-    sta m_set_x
+
+	lda #PL_TILE
+	jsr get_tile_x_for_pl1
+    ;lda m_set_x
     sta m_p1_x
-    lda #0
-    sta m_set_x + 1
-    sta m_p1_x + 1
+    ;lda m_set_x + 1
+    stx m_p1_x + 1
+
+	lda m_p1_x
+	sta m_set_x 
+	lda m_set_x + 1
+	sta m_set_x + 1
 
     lda #<FLOOR_LEVEL
     sta m_set_y
@@ -39,7 +45,7 @@ init_pc1
     lda #>FLOOR_LEVEL
     sta m_set_y + 1
     sta m_p1_y +1
-    #set_npc_xy SPR_CTRL_00
+    #set_sprite_xy SPR_CTRL_00
 
     stz m_pc1_animation
     stz m_pc1_frames_animation
@@ -123,13 +129,22 @@ _jumping
     jsr jump_frm_16
     jsr jump_frm_17
     jsr jump_frm_18
-    lda #<PLAYER_X
-    sta m_set_x
+	lda #PL_TILE
+	jsr get_tile_x_for_pl1
+    ;lda m_set_x
     sta m_p1_x
-    lda #>PLAYER_X
-    sta m_set_x + 1
-    sta m_p1_x + 1
-    set_npc_xy SPR_CTRL_00
+    ;lda m_set_x + 1
+
+	;lda m_p1_x
+	;sta m_set_x 
+	;lda m_set_x + 1
+	;sta m_set_x + 1
+	lda #$50
+	sta m_p1_x
+	sta m_set_x
+	stz m_set_x + 1
+	stz m_p1_x + 1
+    #set_sprite_xy SPR_CTRL_00
     rts
 
 set_jump_frames
@@ -366,7 +381,7 @@ create_player_hitbox
 	;get hit box of snack
 	lda m_p1_x
 	clc 
-	adc #32
+	adc #15
 	sta m_p1_x_end
 
 	lda m_p1_x +1
@@ -375,7 +390,7 @@ create_player_hitbox
 
 	lda m_p1_y
 	clc 
-	adc #32
+	adc #31
 	sta m_p1_y_end
 
 	lda m_p1_y +1

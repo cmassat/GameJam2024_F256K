@@ -30,7 +30,7 @@ init_candy2
 
 handle_candy2
 	lda m_candy2_tile
-	jsr get_tile_pixel_x
+	;jsr get_tile_pixel_x
 	bcc _move
 	#disable_sprite CANDY2_SPR_NUM
 	rts 
@@ -84,7 +84,7 @@ get_candy2_xy
 	lda #>candy2_FLOOR
 	sta m_set_y + 1
 	sta m_candy2_y + 1
-	#set_npc_xy CANDY2_SPR_NUM
+	#set_sprite_xy CANDY2_SPR_NUM
 	rts 
 
 candy2_fr0
@@ -150,7 +150,7 @@ _do_not_check
 _do_check
 	jsr get_candy2_xy
     ;lda m_candy2_tile
-    ;jsr get_tile_pixel_x
+    ;;jsr get_tile_pixel_x
     ;lda m_set_x
     ;sta m_pumpkin_x
     ;lda m_set_x + 1

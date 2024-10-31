@@ -51,24 +51,24 @@ set_sprite_number
 	sta m_sprite_attr + 1 
 	rts 
 
-set_sprite_xy
-	jsr sprite_get_attr_addr
-	jsr sprite_inc_pointer
-	jsr sprite_inc_pointer
-	jsr sprite_inc_pointer
-	jsr sprite_inc_pointer
-    lda m_set_x
-    sta (POINTER_SPR)
-	jsr sprite_inc_pointer
-    lda m_set_x + 1
-    sta (POINTER_SPR)
-	jsr sprite_inc_pointer
-    lda m_set_y
-    sta (POINTER_SPR)
-	jsr sprite_inc_pointer
-    lda m_set_y + 1
-    sta (POINTER_SPR)
-	rts 
+; set_sprite_xy
+; 	jsr sprite_get_attr_addr
+; 	jsr sprite_inc_pointer
+; 	jsr sprite_inc_pointer
+; 	jsr sprite_inc_pointer
+; 	jsr sprite_inc_pointer
+;     lda m_set_x
+;     sta (POINTER_SPR)
+; 	jsr sprite_inc_pointer
+;     lda m_set_x + 1
+;     sta (POINTER_SPR)
+; 	jsr sprite_inc_pointer
+;     lda m_set_y
+;     sta (POINTER_SPR)
+; 	jsr sprite_inc_pointer
+;     lda m_set_y + 1
+;     sta (POINTER_SPR)
+; 	rts 
 ;a,x
 set_sprite_y
 	sta m_set_y
@@ -157,7 +157,7 @@ disable_sprite .macro SPR_NUM
 .endmacro
 
 ;a register spritenumber
-set_npc_xy .macro SPR_NUM
+set_sprite_xy .macro SPR_NUM
     lda m_set_x
     sta \SPR_NUM + 4
     lda m_set_x + 1

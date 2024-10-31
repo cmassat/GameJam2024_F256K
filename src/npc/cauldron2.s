@@ -24,7 +24,7 @@ init_cauldron2
 
 handle_cauldron2
 	lda m_cauldron2_tile
-	jsr get_tile_pixel_x
+	;jsr get_tile_pixel_x
 	bcc _move
 	#disable_sprite CAULDRON2_SPR_NUM
 	rts 
@@ -78,7 +78,7 @@ get_cauldron2_xy
 	lda #>CAULDRON_FLOOR
 	sta m_set_y + 1
 	sta m_cauldron2_y + 1
-	#set_npc_xy CAULDRON2_SPR_NUM
+	#set_sprite_xy CAULDRON2_SPR_NUM
 	rts 
 
 cualdron2_fr0
@@ -144,7 +144,7 @@ _do_not_check
 _do_check
 	jsr get_cauldron2_xy
     ;lda m_cauldron2_tile
-    ;jsr get_tile_pixel_x
+    ;;jsr get_tile_pixel_x
     ;lda m_set_x
     ;sta m_pumpkin_x
     ;lda m_set_x + 1

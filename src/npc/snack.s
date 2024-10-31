@@ -17,16 +17,16 @@ NPC_SPR_CANDY_12 = NPC_SPR_CANDY_11 + (16 * 16)
 NPC_SPR_CANDY_13 = NPC_SPR_CANDY_12 + (16 * 16)
 .endsection
 
-.section code 
+.section code
 
 init_snack
 	lda #<m_snack_table
-	sta pointer 
+	sta pointer
 	lda #>m_snack_table
 	sta pointer + 1
 	ldy #0
 _loop
-	;pick sprite number 
+	;pick sprite number
 	lda (pointer)
 	jsr set_sprite_number
 	jsr increase_snack_pointer
@@ -36,9 +36,9 @@ _loop
 	lda (pointer)
 	jsr get_tile_pixel_x
 	jsr set_sprite_enable16
-	bcc _go 
+	bcc _go
 	jsr set_sprite_disable
-_go 
+_go
 	lda #<SNACK_FLOOR
 	ldx #>SNACK_FLOOR
 	jsr set_sprite_y
@@ -46,22 +46,22 @@ _go
 
 	lda #<SNACK_FLOOR
 	sta m_snack_y
-	lda #>SNACK_FLOOR 
+	lda #>SNACK_FLOOR
 	sta m_snack_y + 1
 
 	lda m_set_x
 	sta m_snack_x
 	lda m_set_x + 1
 	sta m_snack_x + 1
-		
+
 	;choose sprite to display
 	;based where loaded in memory
 	jsr increase_snack_pointer
 	lda (pointer)
-	pha 
+	pha
 	jsr increase_snack_pointer
 	lda (pointer)
-	tax 
+	tax
 	jsr increase_snack_pointer
 	lda (pointer)
 	tay
@@ -70,27 +70,27 @@ _go
 	jsr increase_snack_pointer
 	lda #1
 	sta (pointer)
-	
 
 	jsr increase_snack_pointer
 	;check if all sprites are loaded
 	lda pointer
 	cmp #<m_end_snack_table
-	bne _loop 
+	bne _loop
 
 	lda pointer + 1
 	cmp #>m_end_snack_table
-	bne _loop 
-rts 
+	bne _loop
+	rts
 
-handle_snack	 
+handle_snack 
+	jsr handle_snack_collision_animation
 	lda #<m_snack_table
-	sta pointer 
+	sta pointer
 	lda #>m_snack_table
 	sta pointer + 1
 	ldy #0
 _loop
-	;pick sprite number 
+	;pick sprite number
 	lda (pointer)
 	jsr set_sprite_number
 	jsr increase_snack_pointer
@@ -98,11 +98,15 @@ _loop
 	;get tile number for sprite
 	;and calc x and y cordinats
 	lda (pointer)
+	sta m_current_tile
 	jsr get_tile_pixel_x
 	jsr set_sprite_enable16
-	bcc _go 
+	lda #1
+	sta m_current_snack_disabled
+	bcc _go
 	jsr set_sprite_disable
-_go 
+	stz m_current_snack_disabled
+_go
 	lda #<SNACK_FLOOR
 	ldx #>SNACK_FLOOR
 	jsr set_sprite_y
@@ -110,22 +114,22 @@ _go
 
 	lda #<SNACK_FLOOR
 	sta m_snack_y
-	lda #>SNACK_FLOOR 
+	lda #>SNACK_FLOOR
 	sta m_snack_y + 1
 
 	lda m_set_x
 	sta m_snack_x
 	lda m_set_x + 1
 	sta m_snack_x + 1
-		
+
 	;choose sprite to display
 	;based where loaded in memory
 	jsr increase_snack_pointer
 	lda (pointer)
-	pha 
+	pha
 	jsr increase_snack_pointer
 	lda (pointer)
-	tax 
+	tax
 	jsr increase_snack_pointer
 	lda (pointer)
 	tay
@@ -138,21 +142,25 @@ _go
 	bra _keep_on_sprite
 _turn_off_sprite
 	jsr set_sprite_disable
+	stz m_current_snack_disabled
 _keep_on_sprite
 	jsr check_snack_collision
-	
+
 	jsr increase_snack_pointer
 	;check if all sprites are loaded
 	lda pointer
 	cmp #<m_end_snack_table
-	bne _loop 
+	bne _loop
 
 	lda pointer + 1
 	cmp #>m_end_snack_table
-	bne _loop 
-	rts 
+	bne _loop
+	rts
 
 check_snack_collision
+	lda m_current_snack_disabled
+	cmp #0
+	beq _no_collission
 	jsr create_snack_hitbox
 	jsr create_player_hitbox
 	jsr is_collision
@@ -162,101 +170,99 @@ check_snack_collision
 	sta (pointer)
 	lda #1
 	sta m_show_snack_collision
-	jsr get_x_coord
-	lda m_snack_collision_x
-	ldx m_snack_collision_x + 1
+	lda m_current_tile
+	sta m_collision_tile_number
 	rts
 _no_collission
-	rts 
-
+	rts
 
 create_snack_hitbox
 	;get hit box of snack
 	lda m_snack_x
-	clc 
+	clc
 	adc #16
 	sta m_snack_x_end
 
-	lda m_snack_x +1 
+	lda m_snack_x +1
 	adc #0
 	sta m_snack_x_end + 1
 
 	lda m_snack_y
-	clc 
+	clc
 	adc #16
 	sta m_snack_y_end
 
 	lda m_snack_y +1
 	adc #0
 	sta m_snack_y_end + 1
-	rts 
+	rts
 
-is_collision  
+is_collision
 	jsr determine_collision_x_start
-	jsr determine_collision_x_end 
+	jsr determine_collision_x_end
 	jsr determine_collision_y_start
 	jsr determine_collision_y_end
 	jsr check_hitbox_overlap
-rts 
+rts
 
 check_hitbox_overlap
-	
+
 	lda m_collide_x_start + 1
 	cmp #0
 	bne _end
-	
+
 	lda m_collide_x_end + 1
 	cmp #0
 	bne _end
 
 	lda m_collide_y_end + 1
 	cmp #0
-	bne _end 
+	bne _end
 
 	lda m_collide_y_start + 1
 	cmp #0
 	bne _end
-	jsr print_scroll
+
 	jsr is_x_in_range
-	bcs _end 
+	bcs _end
 	jsr is_y_in_range
-	bcs _end 
+	bcs _end
 	clc
-	rts 
+	rts
 _end
- 	sec 
-	rts 
+ 	sec
+	rts
 
 is_x_in_range
-	lda m_collide_x_start 
-	cmp #16
+	lda m_collide_x_start
+	cmp #8
 	bcc _x_collided
-	lda m_collide_x_end 
-	cmp #16
+	lda m_collide_x_end
+	cmp #8
 	bcc _x_collided
-	sec  
-	rts 
+	sec
+	rts
 _x_collided
 	clc
-	rts 
+	rts
 
 is_y_in_range
-	lda m_collide_y_start 
-	cmp #16
+	lda m_collide_y_start
+	cmp #8
 	bcc _y_collided
-	lda m_collide_y_end 
-	cmp #16
+	lda m_collide_y_end
+	cmp #8
 	bcc _y_collided
-	sec  
-	rts 
+	sec
+	rts
 _y_collided
 	clc
-	rts 
+	rts
 
 determine_collision_x_start
-	lda m_snack_x 
-	sec 
-	sbc m_p1_x 
+	lda m_snack_x
+	sec
+	sbc m_p1_x
 	sta m_collide_x_start
 
 	lda m_snack_x + 1
@@ -267,15 +273,15 @@ determine_collision_x_start
 	cmp #%10000000
 	beq _is_neg
 	rts
-_is_neg 
+_is_neg
 	lda m_collide_x_start + 1
 	eor #$ff
 	sta m_collide_x_start + 1
 
-	lda m_collide_x_start 
-	eor #$ff 
-	sta m_collide_x_start 
-	rts 
+	lda m_collide_x_start
+	eor #$ff
+	sta m_collide_x_start
+	rts
 
 determine_collision_x_end
 	lda m_snack_x_end
@@ -290,20 +296,20 @@ determine_collision_x_end
 	cmp #%10000000
 	beq _is_neg
 	rts
-_is_neg 
+_is_neg
 	lda m_collide_x_end + 1
 	eor #$ff
 	sta m_collide_x_end + 1
 
-	lda m_collide_x_end 
-	eor #$ff 
+	lda m_collide_x_end
+	eor #$ff
 	sta m_collide_x_end
-	rts 
+	rts
 
 determine_collision_y_start
 	lda m_snack_y
-	sec 
-	sbc m_p1_y 
+	sec
+	sbc m_p1_y
 	sta m_collide_y_start
 
 	lda m_snack_y + 1
@@ -314,23 +320,23 @@ determine_collision_y_start
 	cmp #%10000000
 	beq _is_neg
 	rts
-_is_neg 
+_is_neg
 	lda m_collide_y_start + 1
 	eor #$ff
 	sta m_collide_y_start + 1
 
-	lda m_collide_y_start 
-	eor #$ff 
-	sta m_collide_y_start 
 	lda m_collide_y_start
-	clc 
+	eor #$ff
+	sta m_collide_y_start
+	lda m_collide_y_start
+	clc
 	adc #1
 	sta m_collide_y_start
-	rts 
+	rts
 
 determine_collision_y_end
 	lda m_snack_y_end
-	sec 
+	sec
 	sbc m_p1_y_end
 	sta m_collide_y_end
 
@@ -342,30 +348,30 @@ determine_collision_y_end
 	cmp #%10000000
 	beq _is_neg
 	rts
-_is_neg 
+_is_neg
 	lda m_collide_y_end + 1
 	eor #$ff
 	sta m_collide_y_end + 1
 
-	lda m_collide_y_end 
-	eor #$ff 
-	sta m_collide_y_end 
 	lda m_collide_y_end
-	clc 
+	eor #$ff
+	sta m_collide_y_end
+	lda m_collide_y_end
+	clc
 	adc #1
 	sta m_collide_y_end
-	rts 
+	rts
 
 increase_snack_pointer
 	lda pointer
-	clc 
-	adc #1 
+	clc
+	adc #1
 	sta pointer
 
 	lda pointer + 1
-	adc #0 
+	adc #0
 	sta pointer + 1
-	rts 
+	rts
 .endsection
 .section variables
 m_snack_table
@@ -385,13 +391,12 @@ m_snack_table
 m_end_snack_table
 m_snack_table_length = m_end_snack_table - m_snack_table
 
-
 m_collide_x_start .byte 0,0
 m_collide_x_end .byte 0,0
 m_collide_y_start .byte 0,0
 m_collide_y_end .byte 0,0
 
-m_snack_x 
+m_snack_x
 	.byte 0,0
 m_snack_y
 	.byte 0,0
@@ -400,13 +405,15 @@ m_snack_x_end
 	.byte 0,0
 m_snack_y_end
 	.byte 0,0
-
+m_current_tile
+	.byte 0
+m_current_snack_disabled
+	.byte 0
 m_show_snack_collision
 	.byte 0
-m_snack_collision_x
-	.byte 0,0
-m_snack_collision_y
-	.byte 0,0
+
+m_collision_tile_number
+	.byte 0
 
 m_snack_loader
 	.byte 0,0

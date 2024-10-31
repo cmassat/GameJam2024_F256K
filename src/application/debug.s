@@ -1,5 +1,8 @@
 .section code
 print_scroll
+	pha
+	phx 
+	phy
     jsr print_y_hi
     jsr print_y_lo
     jsr print_pumpkin_y_hi
@@ -7,6 +10,14 @@ print_scroll
     jsr print_collide_y_hi
     jsr print_collide_y_lo
     jsr print_collide
+	jsr print_collide1
+	jsr print_row3_a
+	jsr print_row3_b
+	jsr print_row3_c
+	jsr print_row3_d
+	ply 
+	plx 
+	pla 
     rts
 
 print_y_hi
@@ -18,7 +29,7 @@ print_y_hi
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_collide_x_start +1
+    lda m_gem_collide_start_y + 1
     lsr
     lsr
     lsr
@@ -28,7 +39,7 @@ print_y_hi
     lda (POINTER_TXT), y
     sta $C000
 
-    lda m_collide_x_start + 1
+    lda m_gem_collide_start_y + 1
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -46,7 +57,7 @@ print_y_lo
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_collide_x_start
+    lda m_gem_collide_start_y
     lsr
     lsr
     lsr
@@ -56,7 +67,7 @@ print_y_lo
     lda (POINTER_TXT), y
     sta $C002
 
-    lda m_collide_x_start
+    lda m_gem_collide_start_y
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -74,7 +85,7 @@ print_pumpkin_y_hi
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_collide_x_end + 1
+    lda m_gem_collide_end_y + 1
     lsr
     lsr
     lsr
@@ -82,13 +93,13 @@ print_pumpkin_y_hi
     and #$0f
     tay
     lda (POINTER_TXT), y
-    sta $C000 + 5
+    sta $C005
 
-    lda m_collide_x_end + 1
+    lda m_gem_collide_end_y + 1
     and #$0f
     tay
     lda (POINTER_TXT), y
-    sta $C000 + 6
+    sta $C006
 
     stz MMU_IO_CTRL
     rts
@@ -102,7 +113,7 @@ print_pumpkin_y_lo
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_collide_x_end
+    lda m_gem_collide_end_y
     lsr
     lsr
     lsr
@@ -110,19 +121,19 @@ print_pumpkin_y_lo
     and #$0f
     tay
     lda (POINTER_TXT), y
-    sta $C000 + 7
+    sta $C007
 
-    lda m_collide_x_end
+    lda m_gem_collide_end_y
     and #$0f
     tay
     lda (POINTER_TXT), y
-    sta $C000 + 8
+    sta $C008
 
     stz MMU_IO_CTRL
     rts
 
 print_collide_y_hi
-    lda #2
+   lda #2
     sta MMU_IO_CTRL
 
     lda <#hex_values
@@ -130,7 +141,7 @@ print_collide_y_hi
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_collide_y_start + 1
+    lda m_gem_collide_start_x + 1
     lsr
     lsr
     lsr
@@ -138,13 +149,13 @@ print_collide_y_hi
     and #$0f
     tay
     lda (POINTER_TXT), y
-    sta $C000 + 80
+    sta $C050
 
-    lda m_collide_y_start + 1
+    lda  m_gem_collide_start_x + 1
     and #$0f
     tay
     lda (POINTER_TXT), y
-    sta $C000 + 81
+    sta $C051
 
     stz MMU_IO_CTRL
     rts
@@ -157,21 +168,21 @@ print_collide_y_lo
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_collide_y_start
+    lda  m_gem_collide_start_x
     lsr
-    lsra
+    lsr
     lsr
     lsr
     and #$0f
     tay
     lda (POINTER_TXT), y
-    sta $C000 + 82
+    sta $C052
 
-    lda m_collide_y_start
+    lda  m_gem_collide_start_x
     and #$0f
     tay
     lda (POINTER_TXT), y
-    sta $C000 + 83
+    sta $C053
 
     stz MMU_IO_CTRL
     rts
@@ -180,12 +191,12 @@ print_collide
     lda #2
     sta MMU_IO_CTRL
 
-    lda <#hex_values
+    lda #<hex_values
     sta POINTER_TXT
-    lda >#hex_values
+    lda #>hex_values
     sta POINTER_TXT + 1
 
-    lda m_collide_y_end + 1
+    lda  m_gem_collide_end_x + 1
     lsr
     lsr
     lsr
@@ -193,16 +204,16 @@ print_collide
     and #$0f
     tay
     lda (POINTER_TXT), y
-    sta $C000 + 85
+    sta $C055
 
-    lda m_collide_y_end + 1
+    lda m_gem_collide_end_x + 1
     and #$0f
     tay
     lda (POINTER_TXT), y
-    sta $C000 + 86
+    sta $C056
 
     stz MMU_IO_CTRL
-	jsr print_collide1
+
     rts
 
 print_collide1
@@ -214,7 +225,7 @@ print_collide1
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_collide_y_end
+    lda  m_gem_collide_end_x
     lsr
     lsr
     lsr
@@ -222,13 +233,125 @@ print_collide1
     and #$0f
     tay
     lda (POINTER_TXT), y
-    sta $C000 + 87
+    sta $C057
 
-    lda m_collide_y_end
+    lda m_gem_collide_end_x + 1
     and #$0f
     tay
     lda (POINTER_TXT), y
-    sta $C000 + 88
+    sta $C058
+
+    stz MMU_IO_CTRL
+    rts
+
+print_row3_a
+    lda #2
+    sta MMU_IO_CTRL
+
+    lda <#hex_values
+    sta POINTER_TXT
+    lda >#hex_values
+    sta POINTER_TXT + 1
+
+    lda  m_tile_gem_collision
+    lsr
+    lsr
+    lsr
+    lsr
+    and #$0f
+    tay
+    lda (POINTER_TXT), y
+    sta $C0a0
+
+    lda m_tile_gem_collision
+    and #$0f
+    tay
+    lda (POINTER_TXT), y
+    sta $C0a1
+
+    stz MMU_IO_CTRL
+    rts
+
+print_row3_b
+    lda #2
+    sta MMU_IO_CTRL
+
+    lda <#hex_values
+    sta POINTER_TXT
+    lda >#hex_values
+    sta POINTER_TXT + 1
+
+    lda  m_x_scroll_tile
+    lsr
+    lsr
+    lsr
+    lsr
+    and #$0f
+    tay
+    lda (POINTER_TXT), y
+    sta $C0a2
+
+    lda m_x_scroll_tile
+    and #$0f
+    tay
+    lda (POINTER_TXT), y
+    sta $C0a3
+
+    stz MMU_IO_CTRL
+    rts
+
+print_row3_c
+    lda #2
+    sta MMU_IO_CTRL
+
+    lda <#hex_values
+    sta POINTER_TXT
+    lda >#hex_values
+    sta POINTER_TXT + 1
+
+    lda  m_tile_num
+    lsr
+    lsr
+    lsr
+    lsr
+    and #$0f
+    tay
+    lda (POINTER_TXT), y
+    sta $C0a5
+
+    lda m_tile_num
+    and #$0f
+    tay
+    lda (POINTER_TXT), y
+    sta $C0a6
+
+    stz MMU_IO_CTRL
+    rts
+
+print_row3_d
+    lda #2
+    sta MMU_IO_CTRL
+
+    lda <#hex_values
+    sta POINTER_TXT
+    lda >#hex_values
+    sta POINTER_TXT + 1
+
+    lda  m_tile_gem_x
+    lsr
+    lsr
+    lsr
+    lsr
+    and #$0f
+    tay
+    lda (POINTER_TXT), y
+    sta $C0a7
+
+    lda m_tile_gem_x
+    and #$0f
+    tay
+    lda (POINTER_TXT), y
+    sta $C0a8
 
     stz MMU_IO_CTRL
     rts

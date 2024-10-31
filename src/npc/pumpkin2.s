@@ -46,7 +46,7 @@ _next_frame
 show_pumpkin2
     inc m_pumpkin2_v_sync
     lda m_pumpkin2_tile
-    jsr get_tile_pixel_x
+    ;;jsr get_tile_pixel_x
 	
     bcc _ok
 	#disable_sprite PUMPKIN2_SPR_NUM
@@ -58,9 +58,9 @@ _ok
     lda #>pumpkin2_FLOOR
     sta m_set_y + 1
     #set_npc PUMPKIN2_SPR_NUM
-    #set_npc_xy PUMPKIN2_SPR_NUM
+    #set_sprite_xy PUMPKIN2_SPR_NUM
 	lda m_pumpkin2_tile
-    jsr get_tile_pixel_x
+    ;;jsr get_tile_pixel_x
 	
     jsr pumpkin2_fr0
     jsr pumpkin2_fr1
@@ -79,14 +79,14 @@ pumpkin2_fr0
 _ok
     #set_sprite_addr PUMPKIN2_SPR_NUM, NPC_SPR_PMK_0
     lda m_pumpkin2_tile
-    jsr get_tile_pixel_x
+    ;;jsr get_tile_pixel_x
     lda #<PUMPKIN_FLOOR
     sta m_set_y
     sta m_pumpkin2_y
     lda #>PUMPKIN_FLOOR
     sta m_pumpkin2_y +1
     sta m_set_y + 1
-    #set_npc_xy PUMPKIN2_SPR_NUM
+    #set_sprite_xy PUMPKIN2_SPR_NUM
     rts
 
 pumpkin2_fr1
@@ -97,7 +97,7 @@ pumpkin2_fr1
 _ok
      #set_sprite_addr PUMPKIN2_SPR_NUM, NPC_SPR_PMK_1
     lda m_pumpkin2_tile
-    jsr get_tile_pixel_x
+    ;;jsr get_tile_pixel_x
     lda #<pumpkin2_FLOOR
     sec
     sbc #4
@@ -107,7 +107,7 @@ _ok
     sbc #0
 	sta m_pumpkin2_y + 1
     sta m_set_y + 1
-    #set_npc_xy PUMPKIN2_SPR_NUM
+    #set_sprite_xy PUMPKIN2_SPR_NUM
     rts
 
 pumpkin2_fr2
@@ -118,7 +118,7 @@ pumpkin2_fr2
 _ok
     #set_sprite_addr PUMPKIN2_SPR_NUM, NPC_SPR_PMK_2
     lda m_pumpkin2_tile
-    jsr get_tile_pixel_x
+    ;;jsr get_tile_pixel_x
     lda #<pumpkin2_FLOOR
     sec
     sbc #8
@@ -128,7 +128,7 @@ _ok
     sbc #0
 	sta m_pumpkin2_y + 1
     sta m_set_y + 1
-    #set_npc_xy PUMPKIN2_SPR_NUM
+    #set_sprite_xy PUMPKIN2_SPR_NUM
 
     rts
 pumpkin2_fr3
@@ -139,7 +139,7 @@ pumpkin2_fr3
 _ok
     #set_sprite_addr PUMPKIN2_SPR_NUM, NPC_SPR_PMK_3
     lda m_pumpkin2_tile
-    jsr get_tile_pixel_x
+    ;;jsr get_tile_pixel_x
     lda #<pumpkin2_FLOOR
     sec
     sbc #8
@@ -149,7 +149,7 @@ _ok
     sbc #0
 	sta m_pumpkin2_y + 1
     sta m_set_y + 1
-    #set_npc_xy PUMPKIN2_SPR_NUM
+    #set_sprite_xy PUMPKIN2_SPR_NUM
     rts
 pumpkin2_fr4
     lda m_pumpkin2_frame
@@ -160,7 +160,7 @@ _ok
 
     #set_sprite_addr PUMPKIN2_SPR_NUM, NPC_SPR_PMK_4
     lda m_pumpkin2_tile
-    jsr get_tile_pixel_x
+    ;;jsr get_tile_pixel_x
     lda #<pumpkin2_FLOOR
     sec
     sbc #4
@@ -170,7 +170,7 @@ _ok
     sbc #0
 	sta m_pumpkin2_y + 1
     sta m_set_y + 1
-    #set_npc_xy PUMPKIN2_SPR_NUM
+    #set_sprite_xy PUMPKIN2_SPR_NUM
     rts
 pumpkin2_fr5
     lda m_pumpkin2_frame
@@ -180,14 +180,14 @@ pumpkin2_fr5
 _ok
     #set_sprite_addr PUMPKIN2_SPR_NUM, NPC_SPR_PMK_5
     lda m_pumpkin2_tile
-    jsr get_tile_pixel_x
+    ;;jsr get_tile_pixel_x
     lda #<pumpkin2_FLOOR
 	sta m_pumpkin2_y
     sta m_set_y
     lda #>pumpkin2_FLOOR
     sta m_set_y + 1
 	sta m_pumpkin2_y + 1
-    #set_npc_xy PUMPKIN2_SPR_NUM
+    #set_sprite_xy PUMPKIN2_SPR_NUM
     rts
 
 pumpkin2_collision
@@ -201,7 +201,7 @@ _do_not_check
 	rts 
 _do_check
     lda m_pumpkin2_tile
-    jsr get_tile_pixel_x
+    ;;jsr get_tile_pixel_x
     lda m_set_x
     sta m_pumpkin2_x
     lda m_set_x + 1

@@ -1,7 +1,8 @@
 ;.section code
 vgm_start
      pha                         ; save accumulator
-     php                         ; save flags
+     php 
+	 jsr vgm_on                        ; save flags
     ; sei                         ; disable interrupts
 
     ; copy irq_sample_counter to sample_counter
@@ -166,6 +167,29 @@ mac_key_off .macro  channel
     sta ym_reg_data
 .endmacro
 
+
+mac_key_on .macro  channel
+    lda #\channel
+    sta ym_reg_opl2
+    nop
+    nop
+    nop
+    nop
+
+    lda #1
+    sta ym_reg_data
+
+    lda #\channel
+    sta ym_reg_opl3
+    nop
+    nop
+    nop
+    nop
+
+    lda #1
+    sta ym_reg_data
+.endmacro
+
 sof_vgm
     ;jsr init_vgm
     clc
@@ -198,7 +222,20 @@ vgm_stop
     #mac_key_off ym_ch7_frq_kon
     #mac_key_off ym_ch8_frq_kon
     #mac_key_off ym_ch9_frq_kon
+    rts
 
+vgm_on
+    ;stz vgm_play_flag
+
+    #mac_key_on ym_ch1_frq_kon
+    #mac_key_on ym_ch2_frq_kon
+    #mac_key_on ym_ch3_frq_kon
+    #mac_key_on ym_ch4_frq_kon
+    #mac_key_on ym_ch5_frq_kon
+    #mac_key_on ym_ch6_frq_kon
+    #mac_key_on ym_ch7_frq_kon
+    #mac_key_on ym_ch8_frq_kon
+    #mac_key_on ym_ch9_frq_kon
     rts
 
 vgm_play

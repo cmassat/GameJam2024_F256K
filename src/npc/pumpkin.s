@@ -46,7 +46,7 @@ _next_frame
 show_pumpkin
     inc m_pumpkin_v_sync
     lda m_pumpkin_tile
-    jsr get_tile_pixel_x
+    ;;jsr get_tile_pixel_x
 	
     bcc _ok
 	#disable_sprite SPR_CTRL_01
@@ -58,9 +58,9 @@ _ok
     lda #>pumpkin_FLOOR
     sta m_set_y + 1
     #set_npc SPR_CTRL_01
-    #set_npc_xy SPR_CTRL_01
+    #set_sprite_xy SPR_CTRL_01
 	lda m_pumpkin_tile
-    jsr get_tile_pixel_x
+    ;;jsr get_tile_pixel_x
 	
     jsr pumpkin_fr0
     jsr pumpkin_fr1
@@ -68,7 +68,7 @@ _ok
     jsr pumpkin_fr3
     jsr pumpkin_fr4
     jsr pumpkin_fr5
-    jsr pumpkin_collision
+   ;jsr pumpkin_collision
     rts
 
 pumpkin_fr0
@@ -79,14 +79,14 @@ pumpkin_fr0
 _ok
     #set_sprite_addr SPR_CTRL_01, NPC_SPR_PMK_0
     lda m_pumpkin_tile
-    jsr get_tile_pixel_x
+    ;;jsr get_tile_pixel_x
     lda #<PUMPKIN_FLOOR
     sta m_set_y
     sta m_pumpkin_y
     lda #>PUMPKIN_FLOOR
     sta m_pumpkin_y +1
     sta m_set_y + 1
-    #set_npc_xy SPR_CTRL_01
+    #set_sprite_xy SPR_CTRL_01
     rts
 
 pumpkin_fr1
@@ -97,7 +97,7 @@ pumpkin_fr1
 _ok
      #set_sprite_addr SPR_CTRL_01, NPC_SPR_PMK_1
     lda m_pumpkin_tile
-    jsr get_tile_pixel_x
+   ;;jsr get_tile_pixel_x
     lda #<pumpkin_FLOOR
     sec
     sbc #4
@@ -107,7 +107,7 @@ _ok
     sbc #0
 	sta m_pumpkin_y + 1
     sta m_set_y + 1
-    #set_npc_xy SPR_CTRL_01
+    #set_sprite_xy SPR_CTRL_01
     rts
 
 pumpkin_fr2
@@ -118,7 +118,7 @@ pumpkin_fr2
 _ok
     #set_sprite_addr SPR_CTRL_01, NPC_SPR_PMK_2
     lda m_pumpkin_tile
-    jsr get_tile_pixel_x
+    ;;jsr get_tile_pixel_x
     lda #<pumpkin_FLOOR
     sec
     sbc #8
@@ -128,7 +128,7 @@ _ok
     sbc #0
 	sta m_pumpkin_y + 1
     sta m_set_y + 1
-    #set_npc_xy SPR_CTRL_01
+    #set_sprite_xy SPR_CTRL_01
 
     rts
 pumpkin_fr3
@@ -139,7 +139,7 @@ pumpkin_fr3
 _ok
     #set_sprite_addr SPR_CTRL_01, NPC_SPR_PMK_3
     lda m_pumpkin_tile
-    jsr get_tile_pixel_x
+    ;jsr get_tile_pixel_x
     lda #<pumpkin_FLOOR
     sec
     sbc #8
@@ -149,7 +149,7 @@ _ok
     sbc #0
 	sta m_pumpkin_y + 1
     sta m_set_y + 1
-    #set_npc_xy SPR_CTRL_01
+    #set_sprite_xy SPR_CTRL_01
     rts
 pumpkin_fr4
     lda m_pumpkin_frame
@@ -160,7 +160,7 @@ _ok
 
     #set_sprite_addr SPR_CTRL_01, NPC_SPR_PMK_4
     lda m_pumpkin_tile
-    jsr get_tile_pixel_x
+    ;jsr get_tile_pixel_x
     lda #<pumpkin_FLOOR
     sec
     sbc #4
@@ -170,7 +170,7 @@ _ok
     sbc #0
 	sta m_pumpkin_y + 1
     sta m_set_y + 1
-    #set_npc_xy SPR_CTRL_01
+    #set_sprite_xy SPR_CTRL_01
     rts
 pumpkin_fr5
     lda m_pumpkin_frame
@@ -180,14 +180,14 @@ pumpkin_fr5
 _ok
     #set_sprite_addr SPR_CTRL_01, NPC_SPR_PMK_5
     lda m_pumpkin_tile
-    jsr get_tile_pixel_x
+    ;jsr get_tile_pixel_x
     lda #<pumpkin_FLOOR
 	sta m_pumpkin_y
     sta m_set_y
     lda #>pumpkin_FLOOR
     sta m_set_y + 1
 	sta m_pumpkin_y + 1
-    #set_npc_xy SPR_CTRL_01
+    #set_sprite_xy SPR_CTRL_01
     rts
 
 pumpkin_collision
@@ -201,7 +201,7 @@ _do_not_check
 	rts 
 _do_check
     lda m_pumpkin_tile
-    jsr get_tile_pixel_x
+    ;jsr get_tile_pixel_x
     lda m_set_x
     sta m_pumpkin_x
     lda m_set_x + 1

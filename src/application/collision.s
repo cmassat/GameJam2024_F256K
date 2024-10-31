@@ -108,7 +108,7 @@ set_explosion .macro frame_num, spr_location
 _animate
 	#set_sprite_addr COLLISION_SPR_NUM, \spr_location
 	jsr set_xy
-	#set_npc_xy COLLISION_SPR_NUM
+	#set_sprite_xy COLLISION_SPR_NUM
 _skip
 .endmacro
 
@@ -167,7 +167,7 @@ init_explosion_animation
 	#set_pc COLLISION_SPR_NUM
 	#set_sprite_addr COLLISION_SPR_NUM, COLLISION_SPR_00
 	jsr set_xy
-	#set_npc_xy COLLISION_SPR_NUM
+	#set_sprite_xy COLLISION_SPR_NUM
 	rts
 
 check_collision

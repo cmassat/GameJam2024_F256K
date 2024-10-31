@@ -61,13 +61,13 @@ _yes:
 
 init_lvl1_data
 	jsr init_pc1
-	jsr init_pumpkin
-	jsr init_pumpkin2
-	jsr init_cauldron
-	jsr init_cauldron2
-	jsr init_candy
-	jsr init_candy2
-	jsr init_snack
+	;jsr init_pumpkin
+	;jsr init_pumpkin2
+	;jsr init_cauldron
+	;jsr init_cauldron2
+	;jsr init_candy
+	;jsr init_candy2
+	jsr init_gems
     lda #0
     sta m_x_scroll_tile
     sta v_sync
@@ -137,7 +137,6 @@ lvl1_load_data
     jsr load_sprite_bin
     jsr load_sprite_pal
     jsr clut_load_2
-    jsr init_pc1
     jsr play_lvl1_mus
 ;	jsr set_frame_timer
     ;lda #0
@@ -183,8 +182,11 @@ _move
 	;jsr handle_candy2
 	;jsr handle_cauldron
 	;jsr handle_cauldron2
+	
     jsr handle_player_move
-	jsr handle_snack
+	
+	jsr handle_gems
+	;jsr handle_pumpkin
     lda m_p1_direction
     cmp #DIR_RT
     beq _move_right
