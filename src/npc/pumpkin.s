@@ -11,6 +11,65 @@ pumpkin_FLOOR =  240-16
 .endsection
 
 .section code
+
+.section code
+mac_set_y .macro 
+	lda #<GEM_CEILING
+	sta m_set_y
+	lda #>GEM_CEILING
+	sta m_set_y + 1
+.endmacro
+
+mac_gem_init .macro SPRITE_CTRL, SPRITE_ADDR
+	#set_npc \SPRITE_CTRL
+	#set_sprite_addr \SPRITE_CTRL, \SPRITE_ADDR
+.endmacro
+
+mac_gem_handle .macro SPRITE_CTRL, TILE_NUM, SPRITE_NUM
+	lda #\TILE_NUM
+	jsr get_tile_x_for_gem
+	sta m_gem_start_x
+	stx m_gem_start_x + 1
+	bcs _do_not_show
+	
+	ldy #\SPRITE_NUM
+    lda m_gem_enabled, y
+	cmp #0
+	bne _do_not_show
+	#set_npc \SPRITE_CTRL
+	lda m_gem_start_x
+	sta m_set_x
+	lda m_gem_start_x + 1
+	sta m_set_x + 1
+	lda #<GEM_CEILING
+	sta m_set_y
+	lda #>GEM_CEILING
+	sta m_set_y + 1
+	#set_sprite_xy \SPRITE_CTRL
+	bra _check_collision
+_do_not_show
+	#disable_sprite \SPRITE_CTRL
+	inc d_do_not_show
+	bra _skip
+_check_collision
+	
+	stz d_do_not_show
+	jsr is_collision
+	bcc _gem_collided
+	bra _skip
+_gem_collided
+	lda #1
+	sta m_show_gem_collision
+	lda #1
+	ldy #\SPRITE_NUM
+	sta m_gem_enabled, y
+	lda #\TILE_NUM
+	sta m_tile_gem_collision
+	
+_skip
+
+.endmacro
+
 init_pumpkin
     lda #0
     sta m_pumpkin_v_sync

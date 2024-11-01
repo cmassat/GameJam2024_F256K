@@ -64,7 +64,6 @@ _increase_frame
 
 handle_player_move
     jsr handle_jump
-    jsr handle_pumpkin
     ;jsr is_joy_a_right_pressed
     ;bcc _move_right
     jsr is_d_pressed

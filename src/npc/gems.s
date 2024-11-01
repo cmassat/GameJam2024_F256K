@@ -100,7 +100,6 @@ handle_gems
 	jsr handle_gem_collision_animation
 	jsr handle_gem_0
 	jsr handle_gem_1
-	jsr print_scroll
 	rts
 
 create_gem_hitbox

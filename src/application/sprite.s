@@ -13,67 +13,6 @@ SPR_MASK_DISABLE  = %00000000
 SPR_ATTR_START = $D900
 .endsection
 .section code
-
-set_sprite_enable16
-	ldy #0
-	jsr sprite_get_attr_addr
-    lda #SPR_MASK_SIZE_16
-    ora #SPR_MASK_LAYER_0
-    ora #SPR_MASK_CLUT_3
-    ora #SPR_MASK_ENABLE
-    sta (POINTER_SPR),y
-	rts 
-
-set_sprite_disable
-	ldy #0
-	jsr sprite_get_attr_addr
-	lda #0
-    sta (POINTER_SPR),y
-	rts 
-;a,x lo and hi
-set_sprite_number
-	sta $DE00
-	lda #0
-	sta $DE01 
-	lda #8
-	sta $DE02
-    lda #0
-	sta $DE03
-	
-	lda $DE10
-	clc
-	adc #<SPR_ATTR_START 
-	sta m_sprite_attr
-
-
-	lda $DE11
-	adc #>SPR_ATTR_START 
-	sta m_sprite_attr + 1 
-	rts 
-
-; set_sprite_xy
-; 	jsr sprite_get_attr_addr
-; 	jsr sprite_inc_pointer
-; 	jsr sprite_inc_pointer
-; 	jsr sprite_inc_pointer
-; 	jsr sprite_inc_pointer
-;     lda m_set_x
-;     sta (POINTER_SPR)
-; 	jsr sprite_inc_pointer
-;     lda m_set_x + 1
-;     sta (POINTER_SPR)
-; 	jsr sprite_inc_pointer
-;     lda m_set_y
-;     sta (POINTER_SPR)
-; 	jsr sprite_inc_pointer
-;     lda m_set_y + 1
-;     sta (POINTER_SPR)
-; 	rts 
-;a,x
-set_sprite_y
-	sta m_set_y
-	stx m_set_y + 1
-	rts 
 ;a lo
 ;x med
 ;y hi
@@ -169,32 +108,7 @@ set_sprite_xy .macro SPR_NUM
     sta \SPR_NUM + 7
 .endmacro
 
-;a-register#set_sprite_addr ((pointer), y),  NPC_SPR_CANDY_0 
-	lda #8
-	sta $DE02
-	stz $DE03
-	
-	lda $DE10
-	sta POINTER_SPR
-	lda $DE11
-	sta POINTER_SPR + 1
 
-	lda #>SPR_ATTR_START
-	clc 
-	adc POINTER_SPR
-	sta POINTER_SPR
-
-	lda POINTER_SPR + 1
-	adc #<SPR_ATTR_START
-	sta POINTER_SPR + 1
-	ldy #0
-    lda #SPR_MASK_SIZE_16
-    ora #SPR_MASK_LAYER_0
-    ora #SPR_MASK_CLUT_2
-    ora #SPR_MASK_ENABLE
-    sta (POINTER_SPR),y
-    ply
-	rts 
 
 .endsection
 .section variables

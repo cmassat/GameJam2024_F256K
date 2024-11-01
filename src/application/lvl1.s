@@ -61,12 +61,7 @@ _yes:
 
 init_lvl1_data
 	jsr init_pc1
-	;jsr init_pumpkin
-	;jsr init_pumpkin2
-	;jsr init_cauldron
-	;jsr init_cauldron2
-	;jsr init_candy
-	;jsr init_candy2
+	jsr init_pumpkin
 	jsr init_gems
     lda #0
     sta m_x_scroll_tile
@@ -113,13 +108,7 @@ init_lvl1_data
     lda <#SET_ADDR
     sta $D280
     lda >#SET_ADDR
-    sta $D281
-    lda `#SET_ADDR
-    sta $D282
-    lda #%00001000
-    sta $D283
-
-	stz m_x_scroll_pxl
+    sta $D281\
 	stz m_x_scroll_tile
 	rts
 
@@ -177,15 +166,12 @@ _set_speed_2x
     lda #2
     sta m_lvl1_speed
 _move
-	;jsr handle_candy
-	;jsr handle_pumpkin2
-	;jsr handle_candy2
-	;jsr handle_cauldron
-	;jsr handle_cauldron2
+
 	
     jsr handle_player_move
 	
 	jsr handle_gems
+	jsr handle_pumpkin
 	;jsr handle_pumpkin
     lda m_p1_direction
     cmp #DIR_RT
@@ -198,8 +184,6 @@ _move_right
 	lda m_x_scroll_tile
     cmp #60
     bcc _ok_to_scroll
-	jsr init_cauldron
-	jsr init_cauldron2
     rts
 _ok_to_scroll
     lda m_lvl1_speed
@@ -228,8 +212,6 @@ move_left
     lda m_x_scroll_tile
     cmp #0
     bne _ok_to_scroll
-	jsr init_cauldron
-	jsr init_cauldron2
     rts
 _ok_to_scroll
     jsr handle_pc1_animation

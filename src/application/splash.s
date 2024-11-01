@@ -18,7 +18,7 @@ _change_state
     stz keypress
     jsr next_state
     jsr disable_video
-    jsr vgm_stop
+    ;jsr vgm_stop
     rts
 
 show_splash

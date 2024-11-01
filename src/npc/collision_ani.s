@@ -40,6 +40,7 @@ _animate
 	jsr sub_gemfb_set_xy
     lda #1
 	sta m_init_fb_ani
+	rts
 _animate_frames
 	jsr sub_gemfb_set_xy
 	inc m_ani_fb_vsync
@@ -53,8 +54,7 @@ _next_frame
 	lda m_ani_fb_frames
 	cmp #5
 	beq _finished 
-
-	jsr set_sprite_enable16
+	#set_npc GEMFB_00_SPR_CTRL
 	jsr fb_ani_fr0
 	jsr fb_ani_fr1
 	jsr fb_ani_fr2

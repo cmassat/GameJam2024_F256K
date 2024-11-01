@@ -79,7 +79,7 @@ get_tile_x_for_pl1
 get_tile_x_for_gem
     sta m_tile_num 
 	lda m_tile_num
-	cmp #20
+	cmp #22
 	bcc _set_default_lo
 	bra _calc_lo 
 _set_default_lo
@@ -87,7 +87,7 @@ _set_default_lo
 	bra _end_find_tiles
 _calc_lo
 	lda m_tile_num 
-	sbc #20
+	sbc #22
 	sta m_tile_low
 _end_find_tiles 
 	lda m_x_scroll_tile
