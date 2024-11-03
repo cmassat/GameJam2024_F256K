@@ -29,7 +29,7 @@ print_y_hi
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_gem_debug + 1
+    lda m_pump_collision
     lsr
     lsr
     lsr
@@ -39,7 +39,7 @@ print_y_hi
     lda (POINTER_TXT), y
     sta $C000
 
-    lda m_gem_debug + 1
+    lda m_pump_collision
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -57,7 +57,7 @@ print_y_lo
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_gem_debug
+    lda m_pump_hit_frame	
 
     lsr
     lsr
@@ -68,7 +68,7 @@ print_y_lo
     lda (POINTER_TXT), y
     sta $C002
 
-    lda m_gem_debug
+    lda m_pump_hit_frame
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -114,7 +114,7 @@ print_pumpkin_y_lo
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_pumpkin_dir
+    lda m_pump_collision_tile
     lsr
     lsr
     lsr
@@ -124,7 +124,7 @@ print_pumpkin_y_lo
     lda (POINTER_TXT), y
     sta $C007
 
-    lda m_pumpkin_dir
+    lda m_pump_collision_tile
     and #$0f
     tay
     lda (POINTER_TXT), y

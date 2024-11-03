@@ -17,7 +17,10 @@ PL_TILE = 5
 .endsection
 
 .section code
-
+pc1_disable
+	#disable_sprite SPR_CTRL_00
+	rts 
+	
 init_pc1
     #set_pc SPR_CTRL_00
     lda #<SPR32_ADDR

@@ -1,9 +1,14 @@
 .section code
 handle_events
     jsr vgm_update
+	lda sof_semaphore
+    cmp #0
+    bne _wait_for_event
+	lda #1
+	sta sof_semaphore
     jsr handle_splash
     jsr handle_lvl1
-
+_wait_for_event 
 ; Peek at the queue to see if anything is pending
     lda		kernel.args.events.pending  ; Negated count
     bpl		_done
@@ -48,6 +53,8 @@ handle_timer_event
     jsr sof_vgm
 	jsr handle_joy_ports
 	;jsr handle_collision
+	jsr handle_pumpkin
+	jsr handle_gems
 	stz sof_semaphore
 	jsr set_frame_timer
    rts

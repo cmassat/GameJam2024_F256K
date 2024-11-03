@@ -3,12 +3,13 @@ LVL1_LOAD_DATA_STATE = $1
 LVL1_SCROLL_MAP_STATE = $2
 
 handle_lvl1
-	;jsr is_collided
-	;bcc _collission
-	;bra _no_collission
-;_collission
-;	#disable_sprite SPR_CTRL_00
-;	rts
+	lda m_pump_collision
+	cmp #0
+	bne _collission
+	bra _no_collission
+_collission
+	#disable_sprite SPR_CTRL_00
+	rts
 _no_collission
 	
     lda #STATE_LVL1
@@ -16,13 +17,13 @@ _no_collission
     bcc _yes
     rts
 _yes
-    lda sof_semaphore
-    cmp #0
-    beq _continue
-    rts
+    ;lda sof_semaphore
+    ;cmp #0
+    ;beq _continue
+    ;rts
 _continue
-    lda #1
-    sta sof_semaphore
+ ;   lda #1
+  ;  sta sof_semaphore
    ; lda m_lvl1_semaphore
    ; cmp #0
     ;beq _execute
@@ -174,7 +175,7 @@ _move
     jsr handle_player_move
 	
 	jsr handle_gems
-	jsr handle_pumpkin
+	;jsr handle_pumpkin
 	;jsr handle_pumpkin
     lda m_p1_direction
     cmp #DIR_RT
