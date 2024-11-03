@@ -1,60 +1,75 @@
 .section variables
-	PUMP_SPEED = 8
+	PUMP_SPEED = 15
 	PUMP_FRAMES = 4
 .endsection
 
 .section code
-mac_build_frames .macro vsync, frame, speed, num_of_frames
-	lda \vsync
-	cmp #\speed
-	beq _update_frame 
-	bra _skip_frame
-_update_frame
-	lda \frame 
-	cmp #\num_of_frames
-	bcs _reset_frame 
-	inc \frame 
-_reset_frame 
-	stz \frame 
-_skip_frame
+mac_build_frames_by_dist .macro min_y, curr_y, pxls_per_frame, frame
+;	clc
+	lda #\min_y
+	sbc \curr_y
+	cmp #0
+	beq _fr0
+	clc
+	lda #\min_y
+	sbc \curr_y
+	;sta m_math_n
+	ldx #\pxls_per_frame
+	jsr fn_divide_8bit
+	sta \frame
+	bra _end_frame
+_fr0
+	stz \frame
+_end_frame
 .endmacro
 
-mac_ani_up .macro dir 
+mac_ani_up .macro dir, max_height
 	lda \dir
 	cmp #DIR_UP
 	bne _not_up
-	
+	lda m_pump_y
+	cmp #\max_height
+	bcc _move_down
+	dec m_pump_y
+	bra _not_up
+_move_down
+	lda #DIR_DN
+	sta \dir
 _not_up
-.endmacro  
+.endmacro
 
-mac_ani_down .macro dir 
-	lda \dir
+mac_ani_down .macro direction, ob_height
+	lda \direction
 	cmp #DIR_DN
 	bne _not_down
-	
-	inc \frame 
+	lda m_pump_y
+	cmp #\ob_height
+	bcs _move_up
+	inc m_pump_y
+	bra _not_down
+_move_up
+	lda #DIR_UP
+	sta \direction
 _not_down
-.endmacro 
-
+.endmacro
 
 proc_pump_ani
-	#mac_build_frames m_pumpkin_v_sync, m_pumpkin_frame, PUMP_SPEED, PUMP_FRAMES
-	rts 
+	#mac_build_frames_by_dist PUMPKIN_Y_MIN, m_pump_y, PUMKIN_PXLS_PER_FRAME, m_pumpkin_frame
+	#mac_ani_up m_pumpkin_dir, PUMPKIN_Y_MAX
+	#mac_ani_down m_pumpkin_dir, PUMPKIN_Y_MIN
+	rts
 
 handle_pump_animation
 	jsr proc_pump_ani
-	
+	jsr print_scroll
 	rts
-
-.endsection 
+.endsection
 
 .section variables
 	m_pumpkin_v_sync
-		.byte 0 
+		.byte 0
 	m_pumpkin_frame
 		.byte 0
 	m_pumpkin_dir
-		.byte 0
-	m_pump_y 
 		.byte 0
 .endsection

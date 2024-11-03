@@ -65,7 +65,6 @@ _gem_collided
 	sta m_gem_enabled, y
 	lda #\TILE_NUM
 	sta m_tile_gem_collision
-	
 _skip
 
 .endmacro
@@ -138,7 +137,6 @@ is_collision
 rts
 
 check_hitbox_overlap
-	
 	lda m_gem_collide_start_x + 1
 	cmp #0
 	bne _end

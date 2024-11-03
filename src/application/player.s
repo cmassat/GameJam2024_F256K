@@ -383,7 +383,7 @@ create_player_hitbox
 	adc #15
 	sta m_p1_x_end
 
-	lda m_p1_x +1
+	lda m_p1_x + 1
 	adc #0
 	sta m_p1_x_end + 1
 

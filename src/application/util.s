@@ -1,3 +1,4 @@
+.section code 
 ;a lo_byte
 ;b hi_byte
 ;destruct a,x,y
@@ -15,3 +16,34 @@ substract1
 	sbc #0
 	sta (POINTER_UTIL), y 
 rts 
+
+; numerator / denominator
+mac_divide_8bit .macro
+	ldx #0
+_div	
+	lda m_math_n 
+	sbc m_math_d
+	sta m_math_n
+	bpl _add 
+	bra _calc_completed
+_add
+	inx
+	bra _div
+_calc_completed
+	txa 
+.endmacro
+
+
+fn_divide_8bit
+	sta m_math_n
+	stx m_math_d
+	#mac_divide_8bit
+	rts
+
+.endsection
+.section variables 
+m_math_n
+	.byte 0
+m_math_d
+	.byte 0
+.endsection

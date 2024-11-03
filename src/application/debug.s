@@ -29,7 +29,7 @@ print_y_hi
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_show_gem_collision
+    lda m_hitbox_start_x_ovlp
     lsr
     lsr
     lsr
@@ -39,7 +39,7 @@ print_y_hi
     lda (POINTER_TXT), y
     sta $C000
 
-    lda m_show_gem_collision
+    lda m_hitbox_start_x_ovlp
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -57,7 +57,8 @@ print_y_lo
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_tile_gem_collision
+    lda m_hitbox_end_x_ovlp
+
     lsr
     lsr
     lsr
@@ -67,7 +68,7 @@ print_y_lo
     lda (POINTER_TXT), y
     sta $C002
 
-    lda m_tile_gem_collision
+    lda m_hitbox_end_x_ovlp
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -85,7 +86,7 @@ print_pumpkin_y_hi
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda d_debug_gemfb
+    lda PUMKIN_PXLS_PER_FRAME
     lsr
     lsr
     lsr
@@ -95,7 +96,7 @@ print_pumpkin_y_hi
     lda (POINTER_TXT), y
     sta $C005
 
-    lda d_debug_gemfb
+    lda PUMKIN_PXLS_PER_FRAME
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -113,7 +114,7 @@ print_pumpkin_y_lo
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_gem_collide_end_y
+    lda m_pumpkin_dir
     lsr
     lsr
     lsr
@@ -123,7 +124,7 @@ print_pumpkin_y_lo
     lda (POINTER_TXT), y
     sta $C007
 
-    lda m_gem_collide_end_y
+    lda m_pumpkin_dir
     and #$0f
     tay
     lda (POINTER_TXT), y

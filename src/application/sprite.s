@@ -108,7 +108,24 @@ set_sprite_xy .macro SPR_NUM
     sta \SPR_NUM + 7
 .endmacro
 
+sprite_set_x
+	sta m_set_x 
+	stx m_set_x + 1
+	rts
 
+sprite_set_y
+	sta m_set_y
+	stx m_set_y + 1
+	rts 
+	
+sprite_get_x
+	lda m_set_x 
+	ldx m_set_x + 1
+	rts 
+sprite_get_y
+	lda m_set_y
+	ldx m_set_y + 1
+	rts 
 
 .endsection
 .section variables

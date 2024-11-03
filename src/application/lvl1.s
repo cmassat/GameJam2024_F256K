@@ -3,12 +3,12 @@ LVL1_LOAD_DATA_STATE = $1
 LVL1_SCROLL_MAP_STATE = $2
 
 handle_lvl1
-	jsr is_collided
-	bcc _collission
-	bra _no_collission
-_collission
-	#disable_sprite SPR_CTRL_00
-	rts
+	;jsr is_collided
+	;bcc _collission
+	;bra _no_collission
+;_collission
+;	#disable_sprite SPR_CTRL_00
+;	rts
 _no_collission
 	
     lda #STATE_LVL1
@@ -108,8 +108,11 @@ init_lvl1_data
     lda <#SET_ADDR
     sta $D280
     lda >#SET_ADDR
-    sta $D281\
-	stz m_x_scroll_tile
+    sta $D281
+    lda `#SET_ADDR
+    sta $D282
+    lda #%00001000
+    sta $D283
 	rts
 
 lvl1_load_data
@@ -143,18 +146,18 @@ lvl1_load_data
     jsr set_frame_timer
     rts
 
-lvl1_reset_map
-	jsr init_lvl1_data
-	jsr collide_reset
-	rts 
+;lvl1_reset_map
+;	jsr init_lvl1_data
+;	jsr collide_reset
+;	rts 
 
 scroll_lvl1_map
-	jsr do_reset
-	bcc _reset_level
-	bra _play_level
-_reset_level
-	jsr lvl1_reset_map
-	rts
+;	jsr do_reset
+;	bcc _reset_level
+;	bra _play_level
+;_reset_level
+;	jsr lvl1_reset_map
+;	rts
 _play_level 
     lda m_lvl1_speed
     cmp #1
