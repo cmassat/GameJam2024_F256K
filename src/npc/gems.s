@@ -7,8 +7,12 @@ GEM_00_SPR_ADDR = SPR16_ADDR + (16 * 16 * GEM_START)
 GEM_00_TILE_NUM = 10
 
 GEM_01_SPR_CTRL =  SPR_00_CTRL + (31 * 8)
-GEM_01_SPR_ADDR = SPR16_ADDR + (16 * 16 * (GEM_START + 1))
+GEM_01_SPR_ADDR = SPR16_ADDR + (16 * 16 * 5)
 GEM_01_TILE_NUM = 25
+
+GEM_02_SPR_CTRL =  SPR_00_CTRL + (32 * 8)
+GEM_02_SPR_ADDR = SPR16_ADDR + (16 * 16 * 6)
+GEM_02_TILE_NUM = 15
 
 .endsection
 
@@ -20,31 +24,32 @@ mac_set_y .macro
 	sta m_set_y + 1
 .endmacro
 
-mac_gem_init .macro SPRITE_CTRL, SPRITE_ADDR
-	#set_npc \SPRITE_CTRL
-	#set_sprite_addr \SPRITE_CTRL, \SPRITE_ADDR
-.endmacro
+; mac_gem_init .macro SPRITE_CTRL, SPRITE_ADDR
+; 	#set_npc \SPRITE_CTRL
+; 	#set_sprite_addr \SPRITE_CTRL, \SPRITE_ADDR
+; .endmacro
 
 mac_gem_handle .macro SPRITE_CTRL, TILE_NUM, SPRITE_NUM
-	lda #\TILE_NUM
-	jsr get_tile_x_for_gem
-	sta m_gem_start_x
-	stx m_gem_start_x + 1
-	bcs _do_not_show
-	
 	ldy #\SPRITE_NUM
     lda m_gem_enabled, y
 	cmp #0
 	bne _do_not_show
 	#set_npc \SPRITE_CTRL
-	lda m_gem_start_x
-	sta m_set_x
-	lda m_gem_start_x + 1
-	sta m_set_x + 1
+	lda #\TILE_NUM
+	jsr get_tile_x_for_gem
+	jsr sprite_set_x
+	;sta m_gem_start_x
+	;stx m_gem_start_x + 1
+	bcs _do_not_show
+	;lda m_gem_start_x
+	;sta m_set_x
+	;lda m_gem_start_x + 1
+	;sta m_set_x + 1
 	lda #<GEM_CEILING
-	sta m_set_y
-	lda #>GEM_CEILING
-	sta m_set_y + 1
+	;sta m_set_y
+	ldx #>GEM_CEILING
+	;sta m_set_y + 1
+	jsr sprite_set_y
 	#set_sprite_xy \SPRITE_CTRL
 	bra _check_collision
 _do_not_show
@@ -54,7 +59,7 @@ _do_not_show
 _check_collision
 	
 	stz d_do_not_show
-	jsr is_collision
+	jsr is_collision_a
 	bcc _gem_collided
 	bra _skip
 _gem_collided
@@ -70,10 +75,14 @@ _skip
 .endmacro
 
 init_gem_0
-	#mac_gem_init GEM_00_SPR_CTRL, GEM_00_SPR_ADDR
+	#mac_npc_init GEM_00_SPR_CTRL, GEM_00_SPR_ADDR
 	rts
 init_gem_1
-	#mac_gem_init GEM_01_SPR_CTRL, GEM_01_SPR_ADDR
+	#mac_npc_init GEM_01_SPR_CTRL, GEM_01_SPR_ADDR
+	rts
+
+init_gem_2
+	#mac_npc_init GEM_02_SPR_CTRL, GEM_02_SPR_ADDR
 	rts
 
 init_gems
@@ -86,6 +95,7 @@ _loop
 	bne _loop
 	jsr init_gem_0
 	jsr init_gem_1
+	jsr init_gem_2
 	rts 
 
 handle_gem_0
@@ -93,209 +103,215 @@ handle_gem_0
 	rts
 handle_gem_1
 	#mac_gem_handle GEM_01_SPR_CTRL, GEM_01_TILE_NUM, 1
+	jsr sprite_get_x
+	sta m_gem_debug
+	stx m_gem_debug + 1
 	rts 
-	
+handle_gem_2
+	#mac_gem_handle GEM_02_SPR_CTRL, GEM_02_TILE_NUM, 2
+	rts 	
 handle_gems
 	jsr handle_gem_collision_animation
 	jsr handle_gem_0
 	jsr handle_gem_1
+	jsr handle_gem_2
 	rts
 
-create_gem_hitbox
-	;get hit box of snack
-	;lda m_set_x
-	lda m_gem_start_x
-	clc
-	adc #15
-	sta m_gem_end_x
+; create_gem_hitbox
+; 	;get hit box of snack
+; 	;lda m_set_x
+; 	lda m_gem_start_x
+; 	clc
+; 	adc #15
+; 	sta m_gem_end_x
 
-	;lda m_set_x + 1
-	lda m_gem_start_x + 1
-	adc #0
-	sta m_gem_end_x + 1
+; 	;lda m_set_x + 1
+; 	lda m_gem_start_x + 1
+; 	adc #0
+; 	sta m_gem_end_x + 1
 
-	lda #<GEM_CEILING
-	sta m_gem_start_y
-	clc
-	adc #15
-	sta m_gem_end_y
+; 	lda #<GEM_CEILING
+; 	sta m_gem_start_y
+; 	clc
+; 	adc #15
+; 	sta m_gem_end_y
 
-	lda #>GEM_CEILING
-	sta m_gem_start_y + 1
-	adc #0
-	sta m_gem_end_y + 1
-	rts
+; 	lda #>GEM_CEILING
+; 	sta m_gem_start_y + 1
+; 	adc #0
+; 	sta m_gem_end_y + 1
+; 	rts
 
-is_collision
-	jsr create_gem_hitbox
-	jsr create_player_hitbox
-	jsr determine_collision_x_start
-	jsr determine_collision_x_end
-	jsr determine_collision_y_start
-	jsr determine_collision_y_end
-	jsr check_hitbox_overlap
-rts
+; is_collision
+; 	jsr create_gem_hitbox
+; 	jsr create_player_hitbox
+; 	jsr determine_collision_x_start
+; 	jsr determine_collision_x_end
+; 	jsr determine_collision_y_start
+; 	jsr determine_collision_y_end
+; 	jsr check_hitbox_overlap
+; rts
 
-check_hitbox_overlap
-	lda m_gem_collide_start_x + 1
-	cmp #0
-	bne _end
+; check_hitbox_overlap
+; 	lda m_gem_collide_start_x + 1
+; 	cmp #0
+; 	bne _end
 
-	lda m_gem_collide_end_x + 1
-	cmp #0
-	bne _end
+; 	lda m_gem_collide_end_x + 1
+; 	cmp #0
+; 	bne _end
 
-	lda m_gem_collide_end_y + 1
-	cmp #0
-	bne _end
+; 	lda m_gem_collide_end_y + 1
+; 	cmp #0
+; 	bne _end
 
-	lda m_gem_start_y + 1
-	cmp #0
-	bne _end
+; 	lda m_gem_start_y + 1
+; 	cmp #0
+; 	bne _end
 
-	jsr is_x_in_range
-	bcs _end
-	jsr is_y_in_range
-	bcs _end
-	clc
-	rts
-_end
- 	sec
-	rts
+; 	jsr is_x_in_range
+; 	bcs _end
+; 	jsr is_y_in_range
+; 	bcs _end
+; 	clc
+; 	rts
+; _end
+;  	sec
+; 	rts
 
-is_x_in_range
+; is_x_in_range
 	
-	lda m_gem_collide_start_x
-	cmp #15
-	bcc _x_collided
-	lda m_gem_collide_end_x
-	cmp #15
-	bcc _x_collided
-	sec
-	rts
-_x_collided
+; 	lda m_gem_collide_start_x
+; 	cmp #15
+; 	bcc _x_collided
+; 	lda m_gem_collide_end_x
+; 	cmp #15
+; 	bcc _x_collided
+; 	sec
+; 	rts
+; _x_collided
 	
-	clc
-	rts
+; 	clc
+; 	rts
 
-is_y_in_range
+; is_y_in_range
 	
-	lda m_gem_collide_start_y
-	cmp #15
-	bcc _y_collided
-	lda m_gem_collide_end_y
-	cmp #15
-	bcc _y_collided
+; 	lda m_gem_collide_start_y
+; 	cmp #15
+; 	bcc _y_collided
+; 	lda m_gem_collide_end_y
+; 	cmp #15
+; 	bcc _y_collided
 	
-	sec
-	rts
-_y_collided
+; 	sec
+; 	rts
+; _y_collided
 	
-	clc
-	rts
+; 	clc
+; 	rts
 
-m_gem_n
-	.byte 0,0
-m_result_n
-	.byte 0,0
+; m_gem_n
+; 	.byte 0,0
+; m_result_n
+; 	.byte 0,0
 
-m_p1_n
-	.byte 0,0
+; m_p1_n
+; 	.byte 0,0
 
 
-fn_collision
-	lda m_gem_n
-	sec
-	sbc m_p1_n
-	sta m_result_n
+; fn_collision
+; 	lda m_gem_n
+; 	sec
+; 	sbc m_p1_n
+; 	sta m_result_n
 
-	lda m_gem_n + 1
-	sbc m_p1_n + 1
-	sta m_result_n + 1
-	lda m_result_n + 1
-	and #%10000000
-	cmp #%10000000
-	beq _is_neg
-	bra _return
-	rts
-_is_neg
-	lda m_result_n + 1
-	eor #$ff
-	sta m_result_n + 1
+; 	lda m_gem_n + 1
+; 	sbc m_p1_n + 1
+; 	sta m_result_n + 1
+; 	lda m_result_n + 1
+; 	and #%10000000
+; 	cmp #%10000000
+; 	beq _is_neg
+; 	bra _return
+; 	rts
+; _is_neg
+; 	lda m_result_n + 1
+; 	eor #$ff
+; 	sta m_result_n + 1
 
-	lda m_result_n
-	eor #$ff
-	sta m_result_n
-	clc 
-	lda m_result_n
-	adc #1
-	sta m_result_n
-	lda m_result_n + 1
-	adc #0
-	sta m_result_n + 1
-_return
-	lda m_result_n 
-	ldx m_result_n + 1
-	rts 
+; 	lda m_result_n
+; 	eor #$ff
+; 	sta m_result_n
+; 	clc 
+; 	lda m_result_n
+; 	adc #1
+; 	sta m_result_n
+; 	lda m_result_n + 1
+; 	adc #0
+; 	sta m_result_n + 1
+; _return
+; 	lda m_result_n 
+; 	ldx m_result_n + 1
+; 	rts 
 
-determine_collision_x_start
-	lda m_gem_start_x 
-	sta m_gem_n
-	lda m_gem_start_x + 1 
-	sta m_gem_n + 1
-	lda m_p1_x 
-	sta m_p1_n
-	jsr fn_collision
-	sta m_gem_collide_start_x
-	stx m_gem_collide_start_x + 1
-    rts
+; determine_collision_x_start
+; 	lda m_gem_start_x 
+; 	sta m_gem_n
+; 	lda m_gem_start_x + 1 
+; 	sta m_gem_n + 1
+; 	lda m_p1_x 
+; 	sta m_p1_n
+; 	jsr fn_collision
+; 	sta m_gem_collide_start_x
+; 	stx m_gem_collide_start_x + 1
+;     rts
 
-determine_collision_x_end
-	lda m_gem_end_x 
-	sta m_gem_n
-	lda m_gem_end_x + 1 
-	sta m_gem_n + 1
-	lda m_p1_x_end 
-	sta m_p1_n
-	jsr fn_collision
-	sta m_gem_collide_end_x
-	stx m_gem_collide_end_x + 1
-	rts
+; determine_collision_x_end
+; 	lda m_gem_end_x 
+; 	sta m_gem_n
+; 	lda m_gem_end_x + 1 
+; 	sta m_gem_n + 1
+; 	lda m_p1_x_end 
+; 	sta m_p1_n
+; 	jsr fn_collision
+; 	sta m_gem_collide_end_x
+; 	stx m_gem_collide_end_x + 1
+; 	rts
 
-determine_collision_y_start
-	lda m_gem_start_y
-	sta m_gem_n
-	lda m_gem_start_y + 1 
-	sta m_gem_n + 1
-	lda m_p1_y
-	sta m_p1_n
-	jsr fn_collision
-	sta m_gem_collide_start_y
-	stx m_gem_collide_start_y + 1
-	rts
+; determine_collision_y_start
+; 	lda m_gem_start_y
+; 	sta m_gem_n
+; 	lda m_gem_start_y + 1 
+; 	sta m_gem_n + 1
+; 	lda m_p1_y
+; 	sta m_p1_n
+; 	jsr fn_collision
+; 	sta m_gem_collide_start_y
+; 	stx m_gem_collide_start_y + 1
+; 	rts
 
-determine_collision_y_end
-	lda m_gem_end_y
-	sta m_gem_n
-	lda m_gem_end_y + 1 
-	sta m_gem_n + 1
-	lda m_p1_y_end
-	sta m_p1_n
-	jsr fn_collision
-	sta m_gem_collide_end_y
-	stx m_gem_collide_end_y + 1
-	rts
+; determine_collision_y_end
+; 	lda m_gem_end_y
+; 	sta m_gem_n
+; 	lda m_gem_end_y + 1 
+; 	sta m_gem_n + 1
+; 	lda m_p1_y_end
+; 	sta m_p1_n
+; 	jsr fn_collision
+; 	sta m_gem_collide_end_y
+; 	stx m_gem_collide_end_y + 1
+; 	rts
 
-increase_snack_pointer
-	lda pointer
-	clc
-	adc #1
-	sta pointer
+; increase_snack_pointer
+; 	lda pointer
+; 	clc
+; 	adc #1
+; 	sta pointer
 
-	lda pointer + 1
-	adc #0
-	sta pointer + 1
-	rts
+; 	lda pointer + 1
+; 	adc #0
+; 	sta pointer + 1
+; 	rts
 .endsection
 
 .section variables
@@ -313,14 +329,15 @@ increase_snack_pointer
 		.byte 0,0
 	m_gem_end_y
 		.byte 0,0
-	m_gem_collide_start_x
-		.byte 0,0
-	m_gem_collide_end_x 
-		.byte 0,0
-	m_gem_collide_start_y
-		.byte 0,0
-	m_gem_collide_end_y
-		.byte 0,0
+	; m_gem_collide_start_x
+	; 	.byte 0,0
+	; m_gem_collide_end_x 
+	; 	.byte 0,0
+	; m_gem_collide_start_y
+	; 	.byte 0,0
+	; m_gem_collide_end_y
+	; 	.byte 0,0
 	d_do_not_show
 		.byte 0
+	m_gem_debug .byte 0,0
 .endsection

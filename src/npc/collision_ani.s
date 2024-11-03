@@ -77,14 +77,14 @@ fb_ani_fr0
 _end 
 	rts 
 
-fb_set_tile_x_y
-	lda m_tile_gem_collision
-	;jsr get_tile_pixel_x
-	lda #<GEM_CEILING
-	sta m_set_y 
-	lda #>GEM_CEILING
-	sta m_set_y + 1
-	rts 
+; fb_set_tile_x_y
+; 	lda m_tile_gem_collision
+; 	jsr get_tile_pixel_x
+; 	lda #<GEM_CEILING
+; 	sta m_set_y 
+; 	lda #>GEM_CEILING
+; 	sta m_set_y + 1
+; 	rts 
 
 fb_ani_fr1
 	lda m_ani_fb_frames

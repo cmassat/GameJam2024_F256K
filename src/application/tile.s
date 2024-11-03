@@ -97,7 +97,6 @@ _end_find_tiles
 	sec 
     rts
 _ok
-	
     lda m_x_scroll_tile 
 	cmp m_tile_num
 	bcc _ok_hi
@@ -105,29 +104,29 @@ _ok
     sec
     rts
 _ok_hi
-    clc
-     lda m_tile_num
-	 sec
-     sbc m_x_scroll_tile
-     sta $DE00
-     lda #0
-	 sbc #0
-     sta $DE01
-     lda #16
-     sta $DE02
-     lda #0
-     sta $DE03
-     lda $DE10
-     sec
+	clc
+	lda m_tile_num
+	sec
+	sbc m_x_scroll_tile
+	sta $DE00
+	lda #0
+	sbc #0
+	sta $DE01
+	lda #16
+	sta $DE02
+	lda #0
+	sta $DE03
+	lda $DE10
+    sec
     sbc m_x_scroll_pxl
-	sta m_tile_gem_x
-     pha
-	 ;sta m_set_x
-     lda $DE11
-    sta m_tile_gem_x + 1
-     tax; m_set_x + 1
-	 pla
-     clc
+	sta m_tile_x
+    pha
+    lda $DE11
+	sbc #0
+    sta m_tile_x + 1
+    tax
+	pla
+    clc
     rts
 .section variables
     m_tile_num
@@ -140,11 +139,6 @@ _ok_hi
         .byte 0
     m_do_scroll_tile
         .byte 0
-	m_tile_p1_x 
+	m_tile_x
 		.byte 0,0
-	m_tile_param_p1
-		.byte 0
-	m_tile_gem_x
-		.byte 0,0
-	m_tile_param_gem
 .endsection
