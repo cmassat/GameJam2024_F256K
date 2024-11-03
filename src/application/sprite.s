@@ -13,6 +13,26 @@ SPR_MASK_DISABLE  = %00000000
 SPR_ATTR_START = $D900
 .endsection
 .section code
+init_sprites
+	ldy #0
+_loop
+	lda #<SPR_CTRL_00
+	sta pointer 
+	lda #>SPR_CTRL_00
+	sta pointer + 1
+	lda #0
+	sta (pointer)
+	lda pointer
+	clc 
+	adc #8
+	sta pointer 
+	lda pointer + 1
+	adc #0
+	sta pointer + 1
+	iny 
+	cpy #64
+	bne _loop
+	rts 
 ;a lo
 ;x med
 ;y hi
@@ -117,7 +137,7 @@ sprite_set_y
 	sta m_set_y
 	stx m_set_y + 1
 	rts 
-	
+
 sprite_get_x
 	lda m_set_x 
 	ldx m_set_x + 1

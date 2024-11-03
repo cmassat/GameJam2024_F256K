@@ -3,34 +3,24 @@ LVL1_LOAD_DATA_STATE = $1
 LVL1_SCROLL_MAP_STATE = $2
 
 handle_lvl1
-	lda m_pump_collision
-	cmp #0
-	bne _collission
-	bra _no_collission
-_collission
-	#disable_sprite SPR_CTRL_00
-	rts
-_no_collission
-	
+; 	lda m_pump_collision
+; 	cmp #0
+; 	bne _collission
+; 	bra _no_collission
+; _collission
+; 	#disable_sprite SPR_CTRL_00
+; 	rts
+; _no_collission
     lda #STATE_LVL1
     jsr is_state
     bcc _yes
     rts
 _yes
-    ;lda sof_semaphore
-    ;cmp #0
-    ;beq _continue
-    ;rts
+	jsr is_collision_eol
+	bcs _continue
+	rts
+   
 _continue
- ;   lda #1
-  ;  sta sof_semaphore
-   ; lda m_lvl1_semaphore
-   ; cmp #0
-    ;beq _execute
-    ;rts
-;_execute
- ;   lda #1
- ;   sta m_lvl1_semaphore
     lda m_lvl1_state
     cmp #LVL1_INIT_STATE
     bne _load_map

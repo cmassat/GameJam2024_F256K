@@ -1,9 +1,4 @@
-get_x_coord
-	lda m_set_x
-	ldx m_set_x + 1
-	rts
-
-get_tile_x_for_pl1
+get_tile_x_for_player1
 	sta $DE00
 	lda #0
 	sta $DE01

@@ -29,7 +29,7 @@ print_y_hi
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_pump_collision
+    lda m_hitbox_start_x
     lsr
     lsr
     lsr
@@ -39,7 +39,7 @@ print_y_hi
     lda (POINTER_TXT), y
     sta $C000
 
-    lda m_pump_collision
+    lda m_hitbox_start_x 
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -57,7 +57,7 @@ print_y_lo
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_pump_hit_frame	
+    lda m_p1_x
 
     lsr
     lsr
@@ -68,7 +68,7 @@ print_y_lo
     lda (POINTER_TXT), y
     sta $C002
 
-    lda m_pump_hit_frame
+    lda m_p1_x
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -86,7 +86,7 @@ print_pumpkin_y_hi
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda PUMKIN_PXLS_PER_FRAME
+    lda m_hitbox_start_y_ovlp
     lsr
     lsr
     lsr
@@ -96,7 +96,7 @@ print_pumpkin_y_hi
     lda (POINTER_TXT), y
     sta $C005
 
-    lda PUMKIN_PXLS_PER_FRAME
+    lda m_hitbox_start_y_ovlp
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -114,7 +114,7 @@ print_pumpkin_y_lo
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_pump_collision_tile
+    lda m_hitbox_end_y_ovlp
     lsr
     lsr
     lsr
@@ -124,7 +124,7 @@ print_pumpkin_y_lo
     lda (POINTER_TXT), y
     sta $C007
 
-    lda m_pump_collision_tile
+    lda m_hitbox_end_y_ovlp
     and #$0f
     tay
     lda (POINTER_TXT), y

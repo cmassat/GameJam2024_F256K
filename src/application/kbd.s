@@ -50,7 +50,7 @@ _yes
 
 is_q_pressed
     lda keypress
-    cmp #'s'
+    cmp #'q'
     beq _yes
     sec
     rts

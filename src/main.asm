@@ -11,7 +11,9 @@ start
 main
     nop
     stz m_lvl1_state
+	jsr init_sprites
     jsr init_state
+	jsr init_collision
     jsr init_video
     jsr clear_screen
     jsr init_events

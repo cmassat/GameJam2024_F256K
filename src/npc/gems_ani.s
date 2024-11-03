@@ -4,11 +4,9 @@
 	SPR_SNACK_FEEDBACK2 = SPR_SNACK_FEEDBACK1 + (16 * 16)
 	SPR_SNACK_FEEDBACK3 = SPR_SNACK_FEEDBACK2 + (16 * 16)
 	GEMFB_00_SPR_CTRL  = SPR_00_CTRL + (60 * 8)
-
 .endsection
 
 .section code
-
 gem_fb_init
     #set_npc GEMFB_00_SPR_CTRL
     #set_sprite_addr GEMFB_00_SPR_CTRL, SPR_SNACK_FEEDBACK0
@@ -17,12 +15,10 @@ gem_fb_init
 sub_gemfb_set_xy
 	lda m_tile_gem_collision
 	jsr get_tile_x_for_gem
-	sta m_set_x
-	stx m_set_x + 1
+	jsr sprite_set_x
 	lda #<GEM_CEILING
-	sta m_set_y
-	lda #>GEM_CEILING
-	sta m_set_y + 1
+	ldx #>GEM_CEILING
+	jsr sprite_set_y
 	#set_sprite_xy GEMFB_00_SPR_CTRL
 rts
 
@@ -76,15 +72,6 @@ fb_ani_fr0
 	rts
 _end
 	rts
-
-; fb_set_tile_x_y
-; 	lda m_tile_gem_collision
-; 	jsr get_tile_pixel_x
-; 	lda #<GEM_CEILING
-; 	sta m_set_y
-; 	lda #>GEM_CEILING
-; 	sta m_set_y + 1
-; 	rts
 
 fb_ani_fr1
 	lda m_ani_fb_frames

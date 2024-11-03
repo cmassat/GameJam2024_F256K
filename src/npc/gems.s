@@ -8,12 +8,11 @@ GEM_00_TILE_NUM = 10
 
 GEM_01_SPR_CTRL =  SPR_00_CTRL + (31 * 8)
 GEM_01_SPR_ADDR = SPR16_ADDR + (16 * 16 * 5)
-GEM_01_TILE_NUM = 25
+GEM_01_TILE_NUM = 15
 
 GEM_02_SPR_CTRL =  SPR_00_CTRL + (32 * 8)
 GEM_02_SPR_ADDR = SPR16_ADDR + (16 * 16 * 6)
-GEM_02_TILE_NUM = 15
-
+GEM_02_TILE_NUM = 20
 .endsection
 
 .section code
@@ -42,9 +41,9 @@ mac_gem_handle .macro SPRITE_CTRL, TILE_NUM, SPRITE_NUM
 _do_not_show
 	#disable_sprite \SPRITE_CTRL
 	inc d_do_not_show
+	rts
 	bra _skip
 _check_collision
-
 	stz d_do_not_show
 	jsr is_collision_a
 	bcc _gem_collided
@@ -58,7 +57,6 @@ _gem_collided
 	lda #\TILE_NUM
 	sta m_tile_gem_collision
 _skip
-
 .endmacro
 
 init_gem_0
@@ -88,12 +86,11 @@ _loop
 handle_gem_0
 	#mac_gem_handle GEM_00_SPR_CTRL, GEM_00_TILE_NUM, 0
 	rts
+
 handle_gem_1
 	#mac_gem_handle GEM_01_SPR_CTRL, GEM_01_TILE_NUM, 1
-	jsr sprite_get_x
-	sta m_gem_debug
-	stx m_gem_debug + 1
 	rts
+
 handle_gem_2
 	#mac_gem_handle GEM_02_SPR_CTRL, GEM_02_TILE_NUM, 2
 	rts

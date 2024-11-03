@@ -17,30 +17,35 @@ PL_TILE = 5
 .endsection
 
 .section code
-pc1_disable
+
+disable_player1
 	#disable_sprite SPR_CTRL_00
+	rts
+ 
+enable_player1
+	#set_pc SPR_CTRL_00
 	rts 
-	
-init_pc1
-    #set_pc SPR_CTRL_00
-    lda #<SPR32_ADDR
-    sta SPR_CTRL_00 + 1
-    lda #>SPR32_ADDR
-    sta SPR_CTRL_00 + 2
-    lda #`SPR32_ADDR
-    sta SPR_CTRL_00 + 3
 
-	lda #PL_TILE
-	jsr get_tile_x_for_pl1
-    ;lda m_set_x
-    sta m_p1_x
-    ;lda m_set_x + 1
-    stx m_p1_x + 1
-
+get_player1_x
 	lda m_p1_x
-	sta m_set_x 
-	lda m_set_x + 1
-	sta m_set_x + 1
+	ldx m_p1_x + 1
+	rts 
+
+get_player1_y
+	lda m_p1_y
+	ldx m_p1_y + 1
+	rts 
+
+init_pc1
+	lda #3
+	sta m_player_lives
+    #set_pc SPR_CTRL_00
+	#set_sprite_addr SPR_CTRL_00, SPR32_ADDR
+	lda #PL_TILE
+	jsr get_tile_x_for_player1
+	jsr sprite_set_x
+    sta m_p1_x
+    stx m_p1_x + 1
 
     lda #<FLOOR_LEVEL
     sta m_set_y
@@ -66,16 +71,22 @@ _increase_frame
     rts
 
 handle_player_move
+; 	lda  m_jump_lock
+;     cmp #1
+; 	bne _continue 
+; 	jsr handle_jump
+; 	rts
+; _continue 
     jsr handle_jump
-    ;jsr is_joy_a_right_pressed
-    ;bcc _move_right
+    jsr is_joy_a_right_pressed
+    bcc _move_right
     jsr is_d_pressed
     bcc _move_right
 
     jsr is_a_pressed
     bcc _move_left
-    ;jsr is_joy_a_left_pressed
-    ;bcc _move_left
+    jsr is_joy_a_left_pressed
+    bcc _move_left
     lda #DIR_DN
     sta m_p1_direction
     rts
@@ -92,8 +103,8 @@ handle_jump
     lda  m_jump_lock
     cmp #1
     beq _jumping
-    ;jsr is_joy_a_btn_0_pressed
-    ;bcc _jump
+    jsr is_joy_a_btn_0_pressed
+    bcc _jump
     jsr is_j_pressed
     bcc _jump
     rts
@@ -132,27 +143,21 @@ _jumping
     jsr jump_frm_17
     jsr jump_frm_18
 	lda #PL_TILE
-	jsr get_tile_x_for_pl1
-    ;lda m_set_x
-    sta m_p1_x
-    ;lda m_set_x + 1
-
-	;lda m_p1_x
-	;sta m_set_x 
-	;lda m_set_x + 1
-	;sta m_set_x + 1
-	lda #$50
+	jsr get_tile_x_for_player1
+    jsr sprite_set_x
 	sta m_p1_x
-	sta m_set_x
-	stz m_set_x + 1
-	stz m_p1_x + 1
+	;lda #$50
+	;sta m_p1_x
+	;sta m_set_x
+	stx m_set_x + 1
+	;stz m_p1_x + 1
     #set_sprite_xy SPR_CTRL_00
     rts
 
 set_jump_frames
     inc m_jump_vsync
     lda m_jump_vsync
-    cmp #4
+    cmp #3
     beq _increase_frame
     rts
 _increase_frame
@@ -161,10 +166,6 @@ _increase_frame
     rts
 
 jump_frame .macro distance, frame
-    ;lda #<FLOOR_LEVEL
-    ;sta m_p1_y
-    ;lda #>FLOOR_LEVEL
-    ;sta m_p1_y + 1
     lda m_jump_frame
     cmp #\frame
     beq _show_frame
@@ -183,59 +184,58 @@ _skip
 .endmacro
 
 jump_frm_0
-    #jump_frame 3, 0
+    #jump_frame 5, 0
     rts
 jump_frm_1
-    #jump_frame 6, 1
+    #jump_frame 10, 1
     rts
 jump_frm_2
-    #jump_frame 9, 2
+    #jump_frame 20, 2
     rts
 jump_frm_3
-    #jump_frame 12, 3
+    #jump_frame 30, 3
     rts
 jump_frm_4
-    #jump_frame 15, 4
+    #jump_frame 35, 4
     rts
 jump_frm_5
-    #jump_frame 18, 5
+    #jump_frame 35, 5
     rts
 jump_frm_6
-    #jump_frame 21, 6
+    #jump_frame 35, 6
 rts
-
 jump_frm_7
-    #jump_frame 23, 7
+    #jump_frame 35, 7
 rts
 jump_frm_8
-    #jump_frame 26, 8
+    #jump_frame 30, 8
 rts
 jump_frm_9
-    #jump_frame 26, 9
+    #jump_frame 25, 9
 rts
 jump_frm_10
-    #jump_frame 23, 10
+    #jump_frame 20, 10
 rts
 jump_frm_11
-    #jump_frame 21, 11
+    #jump_frame 15, 11
 rts
 jump_frm_12
-    #jump_frame 18, 12
+    #jump_frame 10, 12
 rts
 jump_frm_13
-    #jump_frame 15, 13
+    #jump_frame 5, 13
 rts
 jump_frm_14
-    #jump_frame 12, 14
+    #jump_frame 4, 14
 rts
 jump_frm_15
-    #jump_frame 9, 15
+    #jump_frame 3, 15
 rts
 jump_frm_16
-    #jump_frame 6, 16
+    #jump_frame 2, 16
 rts
 jump_frm_17
-    #jump_frame 3, 17
+    #jump_frame 1, 17
 rts
 jump_frm_18
     #jump_frame 0, 18
@@ -272,26 +272,20 @@ _animate
     beq _fr5
     rts
 _fr0
-    ;#set_sprite_addr SPR_CTRL_00,  PC1_SPR_WLK_R0
     jsr player_fr0
     rts
 _fr1
-    ;#set_sprite_addr SPR_CTRL_00,  PC1_SPR_WLK_R1
     jsr player_fr1
     rts
 _fr2
-    ;#set_sprite_addr SPR_CTRL_00,  PC1_SPR_WLK_R2
     jsr player_fr2
     rts
 _fr3
-    ;#set_sprite_addr SPR_CTRL_00,  PC1_SPR_WLK_R3
     jsr player_fr3
     rts
 _fr4
-    ;#set_sprite_addr SPR_CTRL_00,  PC1_SPR_WLK_R4
     jsr player_fr4
 _fr5
-    ;#set_sprite_addr SPR_CTRL_00,  PC1_SPR_WLK_R5
     jsr player_fr4
     rts
 
@@ -419,5 +413,6 @@ m_jump_frame
     .byte 0
 m_jump_animation_frame
     .byte 0
-
+m_player_lives
+	.byte 0
 .endsection

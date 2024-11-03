@@ -91,11 +91,11 @@ proc_pump_ani
 ; *****************************************************************************
 ; HIT CODE
 ; *****************************************************************************
- set_explosion .macro frame_num, sprite_addr, tile
+ set_explosion .macro sprite_addr, tile
  	#set_pc SPR_CTRL_21
 	#set_sprite_addr SPR_CTRL_21, \sprite_addr
 	lda \tile
-	jsr get_tile_x_for_gem
+	jsr get_tile_x_for_player1
 	bcs _skip
 	jsr sprite_set_x
 	lda #<PUMPKIN_Y_MAX
@@ -106,13 +106,13 @@ _skip
 .endmacro
 
 proc_pump_explosion_ani
-
 	#set_pc SPR_CTRL_21
-	jsr pc1_disable
+	lda #PL_TILE
+	sta m_pump_collision_tile
+	jsr disable_player1
 	jsr explosion_f00
 	#mac_build_frames_by_time m_pump_hit_sync, 8, m_pump_hit_frame, 12
 	; animate_explosion
-
  	jsr explosion_f01
  	jsr explosion_f02
  	jsr explosion_f03
@@ -125,16 +125,20 @@ proc_pump_explosion_ani
  	jsr explosion_f10
  	jsr explosion_f11
  	jsr explosion_f12
+	
 	rts
+
 explosion_f00
 	lda m_pump_hit_frame
 	cmp #0
+	#set_explosion COLLISION_SPR_00, m_pump_collision_tile
 	bne _end
 _end
 	rts
 explosion_f01
 	lda m_pump_hit_frame
 	cmp #1
+	#set_explosion COLLISION_SPR_01, m_pump_collision_tile	
 	bne _end
 _end
 	rts
@@ -142,77 +146,87 @@ explosion_f02
 	lda m_pump_hit_frame
 	cmp #2
 	bne _end
-	#set_explosion 2, COLLISION_SPR_02, m_pump_collision_tile
+	#set_explosion COLLISION_SPR_02, m_pump_collision_tile
 _end
 	rts
 explosion_f03
 	lda m_pump_hit_frame
 	cmp #3
 	bne _end
-	#set_explosion 3, COLLISION_SPR_03, m_pump_collision_tile
+	#set_explosion COLLISION_SPR_03, m_pump_collision_tile
 _end
 	rts
 explosion_f04
 	lda m_pump_hit_frame
 	cmp #4
 	bne _end
-	#set_explosion 4, COLLISION_SPR_04, m_pump_collision_tile
+	#set_explosion COLLISION_SPR_04, m_pump_collision_tile
 _end
 	rts
 explosion_f05
 	lda m_pump_hit_frame
 	cmp #5
 	bne _end
-	#set_explosion 5, COLLISION_SPR_05, m_pump_collision_tile
+	#set_explosion COLLISION_SPR_05, m_pump_collision_tile
 _end
 	rts
 explosion_f06
 	lda m_pump_hit_frame
 	cmp #6
 	bne _end
-	#set_explosion 6, COLLISION_SPR_06, m_pump_collision_tile
+	#set_explosion COLLISION_SPR_06, m_pump_collision_tile
 _end
 	rts
 explosion_f07
 	lda m_pump_hit_frame
 	cmp #7
 	bne _end
-	#set_explosion 7, COLLISION_SPR_07, m_pump_collision_tile
+	#set_explosion COLLISION_SPR_07, m_pump_collision_tile
 _end
 	rts
 explosion_f08
 	lda m_pump_hit_frame
 	cmp #8
 	bne _end
-	#set_explosion 8, COLLISION_SPR_08, m_pump_collision_tile
+	#set_explosion COLLISION_SPR_08, m_pump_collision_tile
 _end
 	rts
 explosion_f09
 	lda m_pump_hit_frame
 	cmp #9
 	bne _end
-	#set_explosion 9, COLLISION_SPR_09, m_pump_collision_tile
+	#set_explosion COLLISION_SPR_09, m_pump_collision_tile
 _end
 	rts
 explosion_f10
 	lda m_pump_hit_frame
 	cmp #10
 	bne _end
-	#set_explosion 10, COLLISION_SPR_10, m_pump_collision_tile
+	#set_explosion COLLISION_SPR_10, m_pump_collision_tile
 _end
 	rts
 explosion_f11
 	lda m_pump_hit_frame
 	cmp #11
 	bne _end
-	#set_explosion 11, COLLISION_SPR_11, m_pump_collision_tile
+	#set_explosion COLLISION_SPR_11, m_pump_collision_tile
 _end
 	rts
 explosion_f12
 	lda m_pump_hit_frame
 	cmp #12
 	bne _end
-	#set_explosion 12, COLLISION_SPR_12, m_pump_collision_tile
+	#set_explosion COLLISION_SPR_12, m_pump_collision_tile
+	jsr explosion_reset
+_end
+	rts
+
+explosion_reset
+	jsr reset_collision_eol
+	#disable_sprite COLLISION_SPR_NUM
+	jsr enable_player1
+	stz m_pump_hit_frame
+	stz m_pump_hit_sync
 _end
 	rts
 

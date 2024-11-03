@@ -1,13 +1,22 @@
 .section code
 handle_events
     jsr vgm_update
+	jsr is_q_pressed
+	bcs _go 
+	jsr reset_game
+_go 
 	lda sof_semaphore
     cmp #0
     bne _wait_for_event
 	lda #1
 	sta sof_semaphore
+	jsr handle_pumpkin
+	jsr handle_joy_ports
     jsr handle_splash
     jsr handle_lvl1
+	
+	jsr handle_gems
+	
 _wait_for_event 
 ; Peek at the queue to see if anything is pending
     lda		kernel.args.events.pending  ; Negated count
@@ -49,15 +58,13 @@ key_released
     lda #0
     sta keypress
     rts
+
 handle_timer_event
     jsr sof_vgm
-	jsr handle_joy_ports
-	;jsr handle_collision
-	jsr handle_pumpkin
-	jsr handle_gems
 	stz sof_semaphore
+	 jsr print_scroll
 	jsr set_frame_timer
-   rts
+	rts
 
 set_frame_timer
     lda #0
@@ -87,7 +94,6 @@ init_events
     lda     #>event
     sta     kernel.args.events+1
     rts
-.endsection
 
 is_sof
     lda sof_semaphore
@@ -98,6 +104,8 @@ is_sof
 _lock
     sec
     rts
+.endsection
+
 .section variables
 sof_semaphore
     .byte 0
