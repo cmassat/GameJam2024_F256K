@@ -17,17 +17,12 @@ GEM_02_TILE_NUM = 15
 .endsection
 
 .section code
-mac_set_y .macro 
+mac_set_y .macro
 	lda #<GEM_CEILING
 	sta m_set_y
 	lda #>GEM_CEILING
 	sta m_set_y + 1
 .endmacro
-
-; mac_gem_init .macro SPRITE_CTRL, SPRITE_ADDR
-; 	#set_npc \SPRITE_CTRL
-; 	#set_sprite_addr \SPRITE_CTRL, \SPRITE_ADDR
-; .endmacro
 
 mac_gem_handle .macro SPRITE_CTRL, TILE_NUM, SPRITE_NUM
 	ldy #\SPRITE_NUM
@@ -38,17 +33,9 @@ mac_gem_handle .macro SPRITE_CTRL, TILE_NUM, SPRITE_NUM
 	lda #\TILE_NUM
 	jsr get_tile_x_for_gem
 	jsr sprite_set_x
-	;sta m_gem_start_x
-	;stx m_gem_start_x + 1
 	bcs _do_not_show
-	;lda m_gem_start_x
-	;sta m_set_x
-	;lda m_gem_start_x + 1
-	;sta m_set_x + 1
 	lda #<GEM_CEILING
-	;sta m_set_y
 	ldx #>GEM_CEILING
-	;sta m_set_y + 1
 	jsr sprite_set_y
 	#set_sprite_xy \SPRITE_CTRL
 	bra _check_collision
@@ -57,7 +44,7 @@ _do_not_show
 	inc d_do_not_show
 	bra _skip
 _check_collision
-	
+
 	stz d_do_not_show
 	jsr is_collision_a
 	bcc _gem_collided
@@ -87,16 +74,16 @@ init_gem_2
 
 init_gems
 	ldx #0
-_loop 
+_loop
 	lda #0
 	sta m_gem_enabled,x
-	inx 
+	inx
 	cpx #10
 	bne _loop
 	jsr init_gem_0
 	jsr init_gem_1
 	jsr init_gem_2
-	rts 
+	rts
 
 handle_gem_0
 	#mac_gem_handle GEM_00_SPR_CTRL, GEM_00_TILE_NUM, 0
@@ -106,10 +93,10 @@ handle_gem_1
 	jsr sprite_get_x
 	sta m_gem_debug
 	stx m_gem_debug + 1
-	rts 
+	rts
 handle_gem_2
 	#mac_gem_handle GEM_02_SPR_CTRL, GEM_02_TILE_NUM, 2
-	rts 	
+	rts
 handle_gems
 	jsr handle_gem_collision_animation
 	jsr handle_gem_0
@@ -125,22 +112,6 @@ handle_gems
 		.byte 0
 	m_gem_enabled
 		.byte 0,0,0,0,0,0,0,0,0,0
-	m_gem_start_x  
-		.byte 0,0
-	m_gem_end_x
-		.byte 0,0
-	m_gem_start_y
-		.byte 0,0
-	m_gem_end_y
-		.byte 0,0
-	; m_gem_collide_start_x
-	; 	.byte 0,0
-	; m_gem_collide_end_x 
-	; 	.byte 0,0
-	; m_gem_collide_start_y
-	; 	.byte 0,0
-	; m_gem_collide_end_y
-	; 	.byte 0,0
 	d_do_not_show
 		.byte 0
 	m_gem_debug .byte 0,0

@@ -18,7 +18,7 @@ PUMP_00_TILE_NUM = 12
 .endsection
 
 .section code
-mac_npc_set_xy .macro sprite_ctrl, tile_num 
+mac_npc_set_xy .macro sprite_ctrl, tile_num
 	lda #\tile_num
 	jsr get_tile_x_for_gem
 	bcc _show
@@ -34,10 +34,10 @@ _show
 _skip
 .endmacro
 
-mac_npc_set_addr .macro sprite_ctrl, frame  
-	lda \frame 
+mac_npc_set_addr .macro sprite_ctrl, frame
+	lda \frame
 	cmp #0
-	beq _fr0 
+	beq _fr0
 	cmp #1
 	beq _fr1
 	cmp #2
@@ -73,18 +73,12 @@ mac_npc_init .macro SPRITE_CTRL, SPRITE_ADDR
 
 init_pump0
 	#mac_npc_init PUMP_00_SPR_CTRL, PUMP_00_SPR_ADDR
-	rts 
+	rts
 
 init_pumpkin
 	ldx #0
-_loop 
+_loop
 	stz m_pump_collision
-	;lda #0
-	;sta m_gem_enabled,x
-	;inx 
-	;cpx #NUMBER_OF_PUMPS
-	;bne _loop
-
 	lda #PUMPKIN_Y_MIN
 	sta m_pump_y_max
 	sta m_pump_y
@@ -97,32 +91,26 @@ _loop
 	rts
 
 handle_pumpkin_0
-	#mac_npc_set_xy PUMP_00_SPR_CTRL, PUMP_00_TILE_NUM	
+	#mac_npc_set_xy PUMP_00_SPR_CTRL, PUMP_00_TILE_NUM
 	#mac_npc_set_addr PUMP_00_SPR_CTRL, m_pumpkin_frame
 	jsr is_collision_a
-	bcc _collided 
+	bcc _collided
 	jsr handle_pump_animation
-	rts 
+	rts
 _collided
 	inc m_pump_collision
 	lda #PUMP_00_TILE_NUM
 	sta m_pump_collision_tile
 	#disable_sprite PUMP_00_SPR_CTRL
-	rts 
+	rts
 
 handle_pumpkin
-	;jsr print_scroll
 	lda m_pump_collision
 	cmp #0
 	bne _handle_collision
-	; #mac_npc_set_xy PUMP_00_SPR_CTRL, PUMP_00_TILE_NUM	
-	; #mac_npc_set_addr PUMP_00_SPR_CTRL, m_pumpkin_frame
-	; jsr is_collision_a
-	; bcs _continue
-	; #disable_sprite PUMP_00_SPR_CTRL
 	jsr handle_pumpkin_0
 	rts
-_handle_collision 
+_handle_collision
 	jsr proc_pump_explosion_ani
 	rts
 .endsection
