@@ -125,7 +125,7 @@ proc_pump_explosion_ani
  	jsr explosion_f10
  	jsr explosion_f11
  	jsr explosion_f12
-	
+
 	rts
 
 explosion_f00
@@ -138,7 +138,7 @@ _end
 explosion_f01
 	lda m_pump_hit_frame
 	cmp #1
-	#set_explosion COLLISION_SPR_01, m_pump_collision_tile	
+	#set_explosion COLLISION_SPR_01, m_pump_collision_tile
 	bne _end
 _end
 	rts

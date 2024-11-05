@@ -4,7 +4,7 @@ NPC_SPR_PMK_1 = NPC_SPR_PMK_0 + (16 * 16)
 NPC_SPR_PMK_2 = NPC_SPR_PMK_1 + (16 * 16)
 NPC_SPR_PMK_3 = NPC_SPR_PMK_2 + (16 * 16)
 NPC_SPR_PMK_4 = NPC_SPR_PMK_3 + (16 * 16)
-NPC_SPR_PMK_5 = NPC_SPR_PMK_4 + (16 * 16)		
+NPC_SPR_PMK_5 = NPC_SPR_PMK_4 + (16 * 16)
 NUMBER_OF_PUMPS = 5
 PUMPKIN_NO_FRAMES = 5
 PUMPKIN_Y_MIN =  240-16; 224
@@ -42,25 +42,6 @@ PUMP_06_TILE_NUM = 65
 .endsection
 
 .section code
-; mac_npc_set_xy .macro sprite_ctrl, tile_num
-; 	lda #\tile_num
-; 	jsr get_tile_x_for_gem
-; 	bcc _mac_npc_set_xy_show
-; 	#disable_sprite \sprite_ctrl
-; 	sec
-; 	rts 
-; 	bra _mac_npc_set_xy_skip
-; _mac_npc_set_xy_show
-; 	jsr sprite_set_x
-; 	lda #<PUMPKIN_Y_MIN
-; 	ldx #>PUMPKIN_Y_MIN
-; 	jsr sprite_set_y
-; 	#set_sprite_xy \sprite_ctrl
-; 	#set_npc \sprite_ctrl
-; 	clc
-; _mac_npc_set_xy_skip
-; .endmacro
-
 mac_npc_set_addr .macro sprite_ctrl, frame
 	lda \frame
 	cmp #0
@@ -115,7 +96,7 @@ mac_npc_init .macro SPRITE_CTRL, SPRITE_ADDR
 .endmacro
 
 init_pump0
-	
+
 	#mac_npc_init PUMP_00_SPR_CTRL, PUMP_00_SPR_ADDR
 	rts
 
@@ -159,7 +140,7 @@ mac_handle_pump .macro SPRITE_CTRL, TILE_NUM, SPRITE_NUM, frame
 	jsr get_tile_x_npc
 	bcs _do_not_show
 	jsr sprite_set_x
-	lda m_pump_y 
+	lda m_pump_y
 	ldx m_pump_y + 1
 	jsr sprite_set_y
 	#set_sprite_xy  \SPRITE_CTRL
@@ -173,7 +154,7 @@ _check_collision
 	lda #\TILE_NUM
 	jsr get_tile_x_for_gem
 	jsr sprite_set_x
-	lda m_pump_y 
+	lda m_pump_y
 	ldx m_pump_y + 1
 	jsr sprite_set_y
 	jsr is_collision_a
@@ -182,22 +163,9 @@ _check_collision
 	bra _skip_pump
 _pump_collided
 	jsr set_collison_eol
-	;lda #1
-	; ;sta m_show_gem_collision
-	;lda #1
 	ldy #\SPRITE_NUM
 	sta m_pump_enabled, y
-	; lda #\TILE_NUM
-	; sta m_tile_gem_collision
-	;lda #\TILE_NUM
- 	;sta m_debug_pump
- 	;jsr set_collison_eol
- 	;#disable_sprite \SPRITE_CTRL
- 	;lda #1
- 	;ldy #0 
- 	;sta m_pump_enabled, y
-	;lda #01
-	;jsr add2score
+	bra _do_not_show
 _skip_pump
 .endmacro
 
@@ -212,23 +180,23 @@ handle_pumpkin_1
 
 handle_pumpkin_2
 	#mac_handle_pump PUMP_02_SPR_CTRL, PUMP_02_TILE_NUM, 2, m_pumpkin_frame
-	rts 
+	rts
 
 handle_pumpkin_3
 	#mac_handle_pump PUMP_03_SPR_CTRL, PUMP_03_TILE_NUM, 3, m_pumpkin_frame
-	rts 
+	rts
 
 handle_pumpkin_4
 	#mac_handle_pump PUMP_04_SPR_CTRL, PUMP_04_TILE_NUM, 4, m_pumpkin_frame
-	rts 
+	rts
 
 handle_pumpkin_5
 	#mac_handle_pump PUMP_05_SPR_CTRL, PUMP_05_TILE_NUM, 5, m_pumpkin_frame
-	rts 
+	rts
 
 handle_pumpkin_6
 	#mac_handle_pump PUMP_06_SPR_CTRL, PUMP_06_TILE_NUM, 6, m_pumpkin_frame
-	rts 
+	rts
 
 handle_pumpkin
 	jsr is_collision_eol
@@ -241,7 +209,6 @@ handle_pumpkin
 	jsr handle_pumpkin_4
 	jsr handle_pumpkin_5
 	jsr handle_pumpkin_6
-	jsr print_scroll
 	rts
 _handle_collision
 	jsr proc_pump_explosion_ani
@@ -255,8 +222,4 @@ _handle_collision
 	m_pump_y     .byte 0,0
 	m_pump_ctrl  .byte 0,0
 	m_pump_collision_tile .byte 0
-	m_debug_pump .byte 0
-	m_debug_pump_x .byte 0,0
-	m_debug_pump_y .byte 0,0
-	m_debug_pump_tile .byte 0
 .endsection

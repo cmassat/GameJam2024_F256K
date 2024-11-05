@@ -29,7 +29,6 @@ handle_gem_collision_animation
 	beq _animate
 rts
 _animate
-	;jsr sub_gemfb_set_xy
 	lda m_init_fb_ani
 	cmp #1
 	beq _animate_frames
@@ -105,6 +104,4 @@ _end
 	m_init_fb_ani .byte 0
 	m_ani_fb_vsync .byte 0
 	m_ani_fb_frames .byte 0
-	d_debug_gemfb
-		.byte 0
 .endsection

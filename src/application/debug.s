@@ -113,7 +113,7 @@ print_pumpkin_y_lo
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_gem_diff
+    lda m_p1_x
     lsr
     lsr
     lsr
@@ -123,7 +123,7 @@ print_pumpkin_y_lo
     lda (POINTER_TXT), y
     sta $C007
 
-    lda m_gem_diff
+    lda m_p1_x
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -141,7 +141,7 @@ print_collide_y_hi
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda m_gem_debug + 1
+    lda m_p1_x + 1
     lsr
     lsr
     lsr
@@ -151,7 +151,7 @@ print_collide_y_hi
     lda (POINTER_TXT), y
     sta $C050
 
-    lda  m_gem_debug + 1
+    lda  m_p1_x + 1
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -168,7 +168,7 @@ print_collide_y_lo
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda  m_gem_debug
+    lda  m_p1_x
     lsr
     lsr
     lsr
@@ -178,7 +178,7 @@ print_collide_y_lo
     lda (POINTER_TXT), y
     sta $C052
 
-    lda  m_gem_debug
+    lda  m_p1_x
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -196,7 +196,7 @@ print_collide
     lda #>hex_values
     sta POINTER_TXT + 1
 
-    lda  m_gem_debug + 1
+    lda  m_p1_x + 1
     lsr
     lsr
     lsr
@@ -206,7 +206,7 @@ print_collide
     lda (POINTER_TXT), y
     sta $C055
 
-    lda m_gem_debug + 1
+    lda m_p1_x + 1
     and #$0f
     tay
     lda (POINTER_TXT), y
@@ -225,7 +225,7 @@ print_collide1
     lda >#hex_values
     sta POINTER_TXT + 1
 
-    lda  m_gem_debug 
+    lda  m_p1_x 
     lsr
     lsr
     lsr
@@ -235,7 +235,7 @@ print_collide1
     lda (POINTER_TXT), y
     sta $C057
 
-    lda m_gem_debug
+    lda m_p1_x
     and #$0f
     tay
     lda (POINTER_TXT), y

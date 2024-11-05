@@ -208,7 +208,7 @@ add2score
 .section variables
 m_score
 m_score_0
- 	.byte 5
+ 	.byte 0
 m_score_1
  	.byte 0
 m_score_2

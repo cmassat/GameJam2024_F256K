@@ -89,64 +89,9 @@ _gem_collided
 	sta m_gem_enabled, y
 	lda #\TILE_NUM
 	sta m_tile_gem_collision
-	lda #5
+	lda #$99
 	jsr add2score
-.endmacro
-
-mac_gem_bad_handle .macro SPRITE_CTRL, TILE_NUM, SPRITE_NUM
-	ldy #\SPRITE_NUM
-    lda m_gem_enabled, y
-	cmp #0
-	bne _do_not_show
-	#set_npc \SPRITE_CTRL
-	
-	lda #\TILE_NUM
-	jsr get_tile_x_for_gem
-	bcs _do_not_show
-	jsr sprite_set_x
-	lda #<GEM_CEILING
-	ldx #>GEM_CEILING
-	jsr sprite_set_y
-	#set_sprite_xy \SPRITE_CTRL
-	bra _check_collision
-_do_not_show
-	#disable_sprite \SPRITE_CTRL
-	rts
-_check_collision
-	lda #\TILE_NUM
-	jsr get_tile_x_for_gem
-	jsr sprite_set_x
-
-	lda #<GEM_CEILING
-	ldx #>GEM_CEILING
-	jsr sprite_set_y
-
-	jsr sprite_get_x
-	sta m_gem_debug
-	stx m_gem_debug + 1
-	lda m_gem_debug
-	ldx m_gem_debug + 1
-	jsr sprite_set_x
-	jsr is_collision_a
-	lda m_hitbox_start_x
-	sta m_gem_diff
-	lda m_hitbox_start_x + 1
-	sta m_gem_diff + 1
-	bcc _gem_collided
-	rts
-_gem_collided
-	lda m_hitbox_start_x
-	sta m_gem_diff
-	lda m_hitbox_start_x + 1
-	sta m_gem_diff + 1
-	lda #1
-	sta m_show_gem_collision
-	lda #1
-	ldy #\SPRITE_NUM
-	sta m_gem_enabled, y
-	lda #\TILE_NUM
-	sta m_tile_gem_collision
-	lda #5
+	lda #$01
 	jsr add2score
 .endmacro
 
@@ -198,7 +143,7 @@ handle_gem_0
 	rts
 
 handle_gem_1
-	#mac_gem_bad_handle GEM_01_SPR_CTRL, GEM_01_TILE_NUM, 1
+	#mac_gem_handle GEM_01_SPR_CTRL, GEM_01_TILE_NUM, 1
 	rts
 
 handle_gem_2
@@ -247,7 +192,4 @@ handle_gems
 		.byte 0,0,0,0,0,0,0,0,0,0,0,0
 	d_do_not_show
 		.byte 0
-	m_gem_debug .byte 0,0
-	m_gem_diff .byte 0,0
-	m_gem_tile .byte 0
 .endsection
