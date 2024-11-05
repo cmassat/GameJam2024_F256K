@@ -13,6 +13,7 @@ gem_fb_init
     rts
 
 sub_gemfb_set_xy
+	stz m_ani_fb_vsync
 	lda m_tile_gem_collision
 	jsr get_tile_x_for_gem
 	jsr sprite_set_x
@@ -28,17 +29,16 @@ handle_gem_collision_animation
 	beq _animate
 rts
 _animate
+	;jsr sub_gemfb_set_xy
 	lda m_init_fb_ani
 	cmp #1
 	beq _animate_frames
-	inc d_debug_gemfb
 	jsr gem_fb_init
 	jsr sub_gemfb_set_xy
     lda #1
 	sta m_init_fb_ani
 	rts
 _animate_frames
-	jsr sub_gemfb_set_xy
 	inc m_ani_fb_vsync
 	lda m_ani_fb_vsync
 	cmp #8

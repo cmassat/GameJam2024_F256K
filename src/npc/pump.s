@@ -102,12 +102,12 @@ init_pumpkin
 	lda #DIR_UP
 	sta m_pumpkin_dir
 	jsr init_pump0
-	;jsr init_pump1
-	;jsr init_pump2
-	;jsr init_pump3
-	;jsr init_pump4
-	;jsr init_pump5
-	;jsr init_pump6
+	jsr init_pump1
+	jsr init_pump2
+	jsr init_pump3
+	jsr init_pump4
+	jsr init_pump5
+	jsr init_pump6
 	rts
 
 mac_npc_init .macro SPRITE_CTRL, SPRITE_ADDR
@@ -162,12 +162,6 @@ mac_handle_pump .macro SPRITE_CTRL, TILE_NUM, SPRITE_NUM, frame
 	lda m_pump_y 
 	ldx m_pump_y + 1
 	jsr sprite_set_y
-	jsr sprite_get_x
-	sta m_debug_pump_x
-	stx m_debug_pump_x + 1
-	jsr sprite_get_x
-	sta m_debug_pump_y
-	stx m_debug_pump_y + 1
 	#set_sprite_xy  \SPRITE_CTRL
 	bra _check_collision
 	rts
@@ -187,11 +181,12 @@ _check_collision
 	bcc _pump_collided
 	bra _skip_pump
 _pump_collided
-	; lda #1
+	jsr set_collison_eol
+	;lda #1
 	; ;sta m_show_gem_collision
-	; lda #1
-	; ldy #\SPRITE_NUM
-	; sta m_pump_enabled, y
+	;lda #1
+	ldy #\SPRITE_NUM
+	sta m_pump_enabled, y
 	; lda #\TILE_NUM
 	; sta m_tile_gem_collision
 	;lda #\TILE_NUM
@@ -201,51 +196,10 @@ _pump_collided
  	;lda #1
  	;ldy #0 
  	;sta m_pump_enabled, y
-	lda #01
-	jsr add2score
+	;lda #01
+	;jsr add2score
 _skip_pump
 .endmacro
-
-; mac_handle_pump .macro pump_num, spr_ctrl, tile_num, frame
-; 	ldy #\pump_num
-; 	lda m_pump_enabled, y 
-; 	cmp #0
-; 	beq _continue_handle_pump
-; 	rts
-; _continue_handle_pump
-; 	#mac_npc_set_xy \spr_ctrl, \tile_num
-; 	#mac_npc_set_addr \spr_ctrl, \frame 
-; 	lda #\tile_num
-; 	jsr get_tile_x_for_gem
-; 	sta m_debug_pump_x
-; 	stx m_debug_pump_x + 1
-; 	jsr sprite_get_y
-; 	sta m_debug_pump_y
-; 	stx m_debug_pump_y + 1
-; 	bcc _set_coord
-; 	jsr print_scroll
-; 	rts 
-; _set_coord
-; 	jsr clear_screen
-; 	jsr sprite_set_x
-; 	jsr is_collision_a
-; 	bcc _continue_handle_pump_coll
-; 	rts
-; _continue_handle_pump_coll
-; 	lda #\tile_num
-; 	sta m_debug_pump
-; 	jsr set_collison_eol
-; 	#disable_sprite \spr_ctrl
-; 	lda #1
-; 	ldy #\pump_num 
-; 	sta m_pump_enabled, y
-; 	jsr sprite_get_x
-; 	sta m_debug_pump_x
-; 	stx m_debug_pump_x + 1 
-; 	lda #\tile_num
-; 	sta m_debug_pump_tile
-	
-; .endmacro
 
 handle_pumpkin_0
 	#mac_handle_pump PUMP_00_SPR_CTRL, PUMP_00_TILE_NUM, 0, m_pumpkin_frame
@@ -281,12 +235,12 @@ handle_pumpkin
 	bcc _handle_collision
 	jsr handle_pump_animation
 	jsr handle_pumpkin_0
-	;jsr handle_pumpkin_1
-	;jsr handle_pumpkin_2
-	;jsr handle_pumpkin_3
-	;jsr handle_pumpkin_4
-	;jsr handle_pumpkin_5
-	;jsr handle_pumpkin_6
+	jsr handle_pumpkin_1
+	jsr handle_pumpkin_2
+	jsr handle_pumpkin_3
+	jsr handle_pumpkin_4
+	jsr handle_pumpkin_5
+	jsr handle_pumpkin_6
 	jsr print_scroll
 	rts
 _handle_collision

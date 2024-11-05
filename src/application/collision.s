@@ -16,14 +16,14 @@ rts
 create_hitbox_a
 	jsr sprite_get_x
 	sta m_hitbox_start_x
+	stx m_hitbox_start_x + 1
+	
 	lda m_hitbox_start_x
 	clc
 	adc #15
 	sta m_hitbox_end_x
 
-	;lda m_set_x + 1
-	txa 
-	sta m_hitbox_end_x + 1
+	lda m_hitbox_start_x + 1 
 	adc #0
 	sta m_hitbox_end_x + 1
 
@@ -47,7 +47,7 @@ fn_collision_a
 	sta m_result_n
 
 	lda m_npc_n + 1
-	sbc m_p1_n + 1
+	sbc #0
 	sta m_result_n + 1
 	lda m_result_n + 1
 	and #%10000000
@@ -59,7 +59,7 @@ _is_neg
 	lda m_result_n + 1
 	eor #$ff
 	sta m_result_n + 1
-
+;
 	lda m_result_n
 	eor #$ff
 	sta m_result_n
