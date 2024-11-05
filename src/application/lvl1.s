@@ -51,6 +51,7 @@ _yes:
     rts
 
 init_lvl1_data
+	jsr init_score
 	jsr init_pc1
 	jsr init_pumpkin
 	jsr init_gems

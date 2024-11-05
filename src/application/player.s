@@ -78,15 +78,15 @@ handle_player_move
 ; 	rts
 ; _continue 
     jsr handle_jump
-    jsr is_joy_a_right_pressed
-    bcc _move_right
+    ;jsr is_joy_a_right_pressed
+    ;bcc _move_right
     jsr is_d_pressed
     bcc _move_right
 
     jsr is_a_pressed
     bcc _move_left
-    jsr is_joy_a_left_pressed
-    bcc _move_left
+   ; jsr is_joy_a_left_pressed
+   ; bcc _move_left
     lda #DIR_DN
     sta m_p1_direction
     rts
@@ -103,8 +103,8 @@ handle_jump
     lda  m_jump_lock
     cmp #1
     beq _jumping
-    jsr is_joy_a_btn_0_pressed
-    bcc _jump
+    ;jsr is_joy_a_btn_0_pressed
+    ;bcc _jump
     jsr is_j_pressed
     bcc _jump
     rts
@@ -146,11 +146,8 @@ _jumping
 	jsr get_tile_x_for_player1
     jsr sprite_set_x
 	sta m_p1_x
-	;lda #$50
-	;sta m_p1_x
-	;sta m_set_x
-	stx m_set_x + 1
-	;stz m_p1_x + 1
+	stx m_p1_x + 1
+	jsr sprite_set_x
     #set_sprite_xy SPR_CTRL_00
     rts
 

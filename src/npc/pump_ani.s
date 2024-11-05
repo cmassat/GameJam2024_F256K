@@ -1,5 +1,5 @@
 .section variables
-	COLLISION_SPR_NUM = SPR_CTRL_21
+	COLLISION_SPR_CTRL = SPR_00_CTRL + (9 * 8)
 	COLLISION_SPR_00 = SPR32_ADDR  + ($400 * 20)
 	COLLISION_SPR_01 = COLLISION_SPR_00  + ($400)
 	COLLISION_SPR_02 = COLLISION_SPR_01  + ($400)
@@ -92,8 +92,8 @@ proc_pump_ani
 ; HIT CODE
 ; *****************************************************************************
  set_explosion .macro sprite_addr, tile
- 	#set_pc SPR_CTRL_21
-	#set_sprite_addr SPR_CTRL_21, \sprite_addr
+ 	#set_pc COLLISION_SPR_CTRL
+	#set_sprite_addr COLLISION_SPR_CTRL, \sprite_addr
 	lda \tile
 	jsr get_tile_x_for_player1
 	bcs _skip
@@ -101,12 +101,12 @@ proc_pump_ani
 	lda #<PUMPKIN_Y_MAX
 	ldx #>PUMPKIN_Y_MAX
 	jsr sprite_set_y
- 	#set_sprite_xy SPR_CTRL_21
+ 	#set_sprite_xy COLLISION_SPR_CTRL
 _skip
 .endmacro
 
 proc_pump_explosion_ani
-	#set_pc SPR_CTRL_21
+	#set_pc COLLISION_SPR_CTRL
 	lda #PL_TILE
 	sta m_pump_collision_tile
 	jsr disable_player1
@@ -223,7 +223,7 @@ _end
 
 explosion_reset
 	jsr reset_collision_eol
-	#disable_sprite COLLISION_SPR_NUM
+	#disable_sprite COLLISION_SPR_CTRL
 	jsr enable_player1
 	stz m_pump_hit_frame
 	stz m_pump_hit_sync

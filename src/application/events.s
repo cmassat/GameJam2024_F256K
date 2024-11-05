@@ -16,6 +16,7 @@ _go
     jsr handle_lvl1
 	
 	jsr handle_gems
+	jsr show_score
 	
 _wait_for_event 
 ; Peek at the queue to see if anything is pending
@@ -62,7 +63,6 @@ key_released
 handle_timer_event
     jsr sof_vgm
 	stz sof_semaphore
-	 jsr print_scroll
 	jsr set_frame_timer
 	rts
 

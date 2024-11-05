@@ -89,6 +89,24 @@ set_sprite_addr .macro SPR_NUM, SPR_ADDR
     pla
 .endmacro
 
+set_sprite_addr_lmh .macro SPR_NUM, lo,med,hi
+    pha
+    phy
+
+    ldy #0
+    lda \lo
+    sta \SPR_NUM + 1
+    iny
+    lda \med
+    sta \SPR_NUM + 2
+    iny
+    lda \hi
+    sta \SPR_NUM + 3
+
+    ply
+    pla
+.endmacro
+
 ;a register spritenumber
 set_npc .macro SPR_NUM
     pha
@@ -127,6 +145,7 @@ set_sprite_xy .macro SPR_NUM
     lda m_set_y + 1
     sta \SPR_NUM + 7
 .endmacro
+
 
 sprite_set_x
 	sta m_set_x 

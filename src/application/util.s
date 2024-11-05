@@ -34,6 +34,22 @@ _calc_completed
 .endmacro
 
 
+fn_multiply_8bit
+	sta m_mult_a
+	stx m_mult_b
+	stz m_mult_result 
+	ldy #0
+_loop
+	lda m_mult_result
+	clc 
+	adc m_mult_a
+	sta m_mult_result
+	iny 
+	cpy m_mult_b
+	bcc _loop 
+	lda m_mult_result
+	rts 
+
 fn_divide_8bit
 	sta m_math_n
 	stx m_math_d
@@ -45,5 +61,11 @@ fn_divide_8bit
 m_math_n
 	.byte 0
 m_math_d
+	.byte 0
+m_mult_a
+	.byte 0
+m_mult_b 
+	.byte 0
+m_mult_result
 	.byte 0
 .endsection

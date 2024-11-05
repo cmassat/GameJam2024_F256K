@@ -16,3 +16,4 @@
 .include "player.s"
 .include "collision.s"
 .include "util.s"
+.include "score.s"
